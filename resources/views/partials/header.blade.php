@@ -2,8 +2,8 @@
 <header class="header">
     <div class="left-section">
         <div class="logo">
-            <span class="title">TRENDTRY</span>
-            <a href="{{route('inicio')}}"><img src="{{asset('img/header/logo.png')}}" alt="Logo"></a>
+            <span class="title">CHICVERSE</span>
+            <a href="{{route('inicio')}}"><img src="{{asset('img/header/logo.svg')}}" alt="Logo"></a>
         </div>
     </div>
     <div class="middle-section">
@@ -20,7 +20,7 @@
         <div class="dropdown">
             <button class="dropbtn"><img class="desplegable" src="{{asset('img/header/desplegable.png')}}"></button>
             <div class="dropdown-content">
-            <div class="item">
+                <div class="item">
                     <img src="{{asset('img/header/inicio.png')}}" class="imgDesplegable" alt="inicio">
                     <a href="{{route('inicio')}}">Inicio</a>
                 </div>

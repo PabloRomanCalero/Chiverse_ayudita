@@ -3,7 +3,64 @@ const mediaContainer = document.getElementById('containerMedia');
 const y = 0;
 let token = document.querySelector('[name=_token]').value;
 
+async function searchUsers() {
+    let arrayUsers = await fetch('/api/users');
+    let usersData = await arrayUsers.json();
+    let buscadorUsers = document.getElementById("searchUser");
+    let resultadosUsersDiv = document.getElementById("resultadosUsersDiv");
+    let formSearchUser = document.getElementById("searchedUserForm");
+    buscadorUsers.addEventListener("input", () => {
+        
+        let filtroU = buscadorUsers.value.trim().toLowerCase();
+        let usersFiltrados = usersData.filter(user => (user.username).toLowerCase().startsWith(filtroU));
+        if (usersFiltrados.length > 0) {
+            resultadosUsersDiv.style.display = "block";    
+            //vaciamos el div del autocomplete
+            resultadosUsersDiv.innerHTML="";
+            usersFiltrados.forEach(user => {
+                let resultadoU = document.createElement("div");
+                let usernameFind = document.createElement("span");
+                let imageUserFind = document.createElement("div");
+                let profileImageFind = document.createElement('img');
+                imageUserFind.classList.add("imageUserFind");
+                resultadoU.classList.add("resultadoU");
+                profileImageFind.src = user.profile_photo; 
+                profileImageFind.alt = 'Imagen del perfil'; 
+                usernameFind.textContent = user.username;
+                
+                profileImageFind.onload = function() {
+                    if (profileImageFind.naturalWidth > profileImageFind.naturalHeight) {
+                        profileImageFind.classList.add('ImagenMayorWidth');
+                    }
+                    else if (profileImageFind.naturalHeight > profileImageFind.naturalWidth) {
+                        profileImageFind.classList.add('ImagenMayorHeight');
+                    }
+                    else{
+                        profileImageFind.classList.add('ImagenCuadrada');
+                    }
+                };
 
+                resultadoU.addEventListener("click", () => {
+                    resultadosUsersDiv.style.display = "none";
+                    resultadosUsersDiv.innerHTML = ""; 
+                    buscadorUsers.value = user.id;   
+                    formSearchUser.submit();
+                });
+
+                imageUserFind.appendChild(profileImageFind)
+                resultadoU.appendChild(imageUserFind)
+                resultadoU.appendChild(usernameFind);
+                resultadosUsersDiv.appendChild(resultadoU);
+                if (filtroU == ''){
+                    resultadosUsersDiv.style.display = "none";
+                    resultadosUsersDiv.innerHTML="";
+                };
+            }); 
+        };
+       
+    });
+    
+}
 
 listarMedia = async () => {
     mediaContainer.innerHTML = '';
@@ -31,6 +88,26 @@ listarMedia = async () => {
 
         const profileMediaElement = document.createElement('div');
         profileMediaElement.classList.add('userMediaDiv');
+        const imgProfileMediaDiv = document.createElement('div');
+        imgProfileMediaDiv.classList.add('imgProfileMediaDiv');
+        const imgProfileMedia = document.createElement('img');
+        imgProfileMedia.classList.add('imgProfileMedia');
+        imgProfileMedia.src = userMedia.profile_photo;
+        imgProfileMedia.alt = 'Imagen del Perfil'
+
+        imgProfileMedia.onload = function() {
+            if (imgProfileMedia.naturalWidth > imgProfileMedia.naturalHeight) {
+                imgProfileMedia.classList.add('ImagenMayorWidth');
+            }
+            else if (imgProfileMedia.naturalHeight > imgProfileMedia.naturalWidth) {
+                imgProfileMedia.classList.add('ImagenMayorHeight');
+            }
+            else{
+                imgProfileMedia.classList.add('ImagenCuadrada');
+            }
+
+        };
+
         const profileMedia = document.createElement('div');
         profileMedia.classList.add('profileMedia');
         profileMedia.innerHTML = userMedia.username;
@@ -134,6 +211,18 @@ listarMedia = async () => {
                     profileImageComment.alt = 'Profile Image'; 
                     imageUserComment.appendChild(profileImageComment);
 
+                    profileImageComment.onload = function() {
+                        if (profileImageComment.naturalWidth > profileImageComment.naturalHeight) {
+                            profileImageComment.classList.add('ImagenMayorWidth');
+                        }
+                        else if (profileImageComment.naturalHeight > profileImageComment.naturalWidth) {
+                            profileImageComment.classList.add('ImagenMayorHeight');
+                        }
+                        else{
+                            profileImageComment.classList.add('ImagenCuadrada');
+                        }
+                    };
+
                     const commentInfo = document.createElement('span');
                     commentInfo.classList.add('commentInfo');
                     commentInfo.textContent = `${userComment.username}: ${comment.comment}`;
@@ -155,7 +244,6 @@ listarMedia = async () => {
         const button = document.createElement('button');
         button.classList.add('botonCrearComment');
         button.type = 'submit';
-
 
         divComments.appendChild(input);
         divComments.appendChild(button);
@@ -192,6 +280,8 @@ listarMedia = async () => {
         contentElement.appendChild(productName);
         contentElement.appendChild(divComments);
 
+        imgProfileMediaDiv.appendChild(imgProfileMedia);
+        profileMediaElement.appendChild(imgProfileMediaDiv);
         profileMediaElement.appendChild(profileMedia);
         mediaElement.appendChild(profileMediaElement);
         if (media.url.toLowerCase().endsWith('.mp4')) {
@@ -199,8 +289,22 @@ listarMedia = async () => {
             videoElement.classList.add('videoMedia');
             videoElement.controls = true;
             videoElement.src = media.url;
+            videoElement.autoplay = true;
+            videoElement.loop = true;
+            videoElement.muted = true;
             divVideoElement.appendChild(videoElement);
             mediaElement.appendChild(divVideoElement);
+
+            videoElement.addEventListener('loadedmetadata', function () {            
+                if (videoElement.videoWidth > videoElement.videoHeight) {
+                    videoElement.classList.add('ImagenMayorWidth');
+                } else if (videoElement.videoHeight > videoElement.videoWidth) {
+                    videoElement.classList.add('ImagenMayorHeight');
+                } else {
+                    videoElement.classList.add('ImagenCuadrada');
+                }
+            });
+            
         } else {
             const imageElement = document.createElement('img');
             imageElement.classList.add('imagenesMedia');
@@ -208,7 +312,22 @@ listarMedia = async () => {
             imageElement.alt = 'Media';
             divVideoElement.appendChild(imageElement);
             mediaElement.appendChild(divVideoElement);
+
+            imageElement.onload = function() {
+                if (imageElement.naturalWidth > imageElement.naturalHeight) {
+                    imageElement.classList.add('ImagenMayorWidth');
+                }
+                else if (imageElement.naturalHeight > imageElement.naturalWidth) {
+                    imageElement.classList.add('ImagenMayorHeight');
+                }
+                else{
+                    imageElement.classList.add('ImagenCuadrada');
+                }
+    
+            };
         }
+
+        
 
         mediaElement.appendChild(hr);
         mediaElement.appendChild(contentElement);
@@ -217,5 +336,6 @@ listarMedia = async () => {
 };
 
 window.onload = async () => {
-    await listarMedia(); 
+    await listarMedia();
+    await searchUsers(); 
 };

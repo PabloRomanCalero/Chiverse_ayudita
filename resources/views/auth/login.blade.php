@@ -3,7 +3,7 @@
 <div class="main-login">
     <section class="section-login">
         <article class="article-login-img">
-            <img src='{{asset("img/header/logo.png")}}' alt="Logo" />
+            <img src='{{asset("img/sidebar/logo.svg")}}' alt="Logo" />
         </article>
         <article class="article-login-form">
             <form action="{{route('login')}}" method="POST">

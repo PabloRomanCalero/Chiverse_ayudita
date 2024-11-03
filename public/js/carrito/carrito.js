@@ -288,7 +288,7 @@ async function compraFinal(precioFinal,numeroCarrito,stockTotal,orderLines,lista
 
             addresses.forEach(address => {
                 let liDireccion = document.createElement('li');
-                liDireccion.textContent = `Direccion: ${address.tipo} ${address.nombre}, Nº ${address.patio}, piso ${address.piso}, puerta ${address.puerta}, ${address.cp}, ${address.localidad}, ${address.pais}`;
+                liDireccion.textContent = `Direccion: ${address.nombre}, Nº ${address.patio}, piso ${address.piso}, puerta ${address.puerta}, ${address.cp}, ${address.localidad}, ${address.pais}`;
                 let botonConfirmarDireccion = document.createElement('button');
                 botonConfirmarDireccion.textContent = 'Confirmar';
                 botonConfirmarDireccion.value = address.id;

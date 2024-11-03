@@ -4,6 +4,10 @@ body {
     overflow-y: scroll;
 }
 
+.seccionesFunciones ul li:nth-child(2) a{
+    font-weight: bold;
+}
+
 .section-profile {
     display: flex;
     flex-direction: column;
@@ -30,15 +34,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
     border-radius: 50%;
     overflow: hidden;
+    position: relative;
     width: 150px;
     height: 150px;
 }
 
 .profile-img {
-    width: auto;
+    width: 100%;
     height: 100%;
 }
 

@@ -5,8 +5,10 @@
 
 @section('content')
     @csrf
-    <div class="product-container" id="product-container" data-product-id="{{$product_id}}"> 
-        
-    </div>
     
+    <div class="product-container" id="product-container" data-product-id="{{$product_id}}"> 
+    </div>
+    <script>
+        const tiendaUrl = "{{ route('tienda') }}";
+    </script>
 @endsection

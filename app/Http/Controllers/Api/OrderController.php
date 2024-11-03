@@ -59,7 +59,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return response()->json($order,200);
     }
 
     /**
@@ -79,6 +79,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $order->delete();
+        return response()->json(["eliminado" => $order], 200);
     }
 }

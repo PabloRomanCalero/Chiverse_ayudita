@@ -7,19 +7,23 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: max-content;
+    margin-top: 1em;
+    margin-bottom: 1em;
     background-color: #222;
 }
 
 .section-registro {
     display: flex;
-    width: 80%;
+    flex-direction: column;
+    width: 35%;
     background-color: #3b3b3b;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .article-registro-img {
+    margin-top: 0.5em;
     flex: 1;
     display: flex;
     justify-content: center;
@@ -27,8 +31,8 @@ body {
 }
 
 .article-registro-img img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
 }
 
 .article-registro-form {
@@ -46,8 +50,21 @@ form {
     flex-direction: column;
 }
 
-div {
-    margin-bottom: 15px;
+fieldset {
+    border: 1px solid #52c856;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+legend {
+    color: #52c856;
+    font-size: 1.2em;
+    padding: 0 10px;
+}
+
+fieldset {
+    margin-bottom: 20px;
 }
 
 label {
@@ -182,5 +199,3 @@ ul li {
         font-size: 1em;
     }
 }
-
-

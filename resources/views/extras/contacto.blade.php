@@ -8,7 +8,7 @@
 <section class="section-contacto">
 
     @csrf
-    <form class="form-contacto" action="https://formsubmit.co/a080999308b5e4cb37c8b0d8b204227b" method="POST">
+    <form class="form-contacto" action="https://formsubmit.co/infochicverse@gmail.com" method="POST">
         <article class="article-contacto">
             <fieldset>
                 <legend>Contacto</legend>
@@ -26,8 +26,8 @@
 
                 <input type="submit" value="Enviar">
 
-                <input type="hidden" name="_next" value="192.168.0.22:8000">
-                <input type="hidden" name="_cc" value=" infotrendtry@gmail.com ">
+                <input type="hidden" name="_next" value="192.168.1.138:8000">
+                <input type="hidden" name="_cc" value=" infochicverse@gmail.com ">
                 <input type="hidden" name="_autoresponse" value="Gracias por confiar en nosotros, te dejamos aquí la copia de tu mensaje">
             </fieldset>
         </article>

@@ -3,6 +3,10 @@ body{
     justify-content: center;
 }
 
+.seccionesFunciones ul li:nth-child(4) a{
+    font-weight: bold;
+}
+
 #section-carrito {
     background-color: white;
     padding: 20px;

@@ -1,3 +1,5 @@
+
+
 #product-container {
     display: flex;
     flex-direction: column;
@@ -53,7 +55,7 @@
     margin-bottom: 15px;
 }
 
-.product button {
+.product-container button {
     background-color: #4CAF50;
     color: #fff;
     border: none;
@@ -64,8 +66,27 @@
     transition: background-color 0.3s;
 }
 
-.product button:hover {
+.product-container button:hover {
     background-color: #45A049;
+}
+
+.buttonVolver {
+    background-color: red !important;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    text-decoration: none;
+
+}
+
+.buttonVolver:hover {
+    background-color: rgb(198, 10, 10) !important;
 }
 
 .product-description {

@@ -49,7 +49,14 @@ async function mostrarProducto() {
         }
     });
 
-    productDiv.append(productImg,productName,productMarca,productSize,productPrice,inputCantidad,addButton);
+    const volverButton = document.createElement('a');
+    volverButton.textContent = 'Volver';
+    volverButton.classList.add('buttonVolver');
+    volverButton.href = tiendaUrl;
+
+
+
+    productDiv.append(productImg,productName,productMarca,productSize,productPrice,inputCantidad,addButton,volverButton);
     productContainer.appendChild(productDiv);
 
     const productDescription = document.createElement('p');

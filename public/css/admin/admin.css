@@ -1,47 +1,182 @@
+main {
+    padding: 0 !important;
+    padding-left: 20px !important;
+    background-color: #f9f9f9;
+}
 
+.section-admin {
+    padding: 20px;
+    color: #333;
+    background-color: #f9f9f9;
+}
 
-.section-admin{
+.titulo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.name-admin {
+    font-size: 20px;
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-modalidades {
     display: flex;
-    flex-direction: column;
-    align-content: center;
-    flex-wrap: wrap;
-    gap: 2em;
-    margin-top: 6em;
+    gap: 20px;
+    margin-bottom: 20px;
 }
-.titulo{
-    font-size: 1.5em;
-    border-bottom: 2px solid black;
-    text-align: center;
+
+.article-modalidades button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    color: #333;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
-.name-admin{
-    text-align: center;
+
+.article-modalidades button:hover {
+    background-color: #e0e0e0;
+    color: #000;
 }
-.article-modalidades{
+
+#edicion, .listado-admin {
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.listado-admin {
+    overflow-y: auto;
+    max-height: 600px;
+}
+
+.listado-admin .botones-lista{
+    list-style: none;
+}
+
+.listado-admin button {
+    background-color: #ddd;
+    color: #333;
+    padding: 10px;
+    margin-right: 5px;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.listado-admin button:hover {
+    background-color: #ccc;
+    color: #000;
+}
+
+.bloque-editar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
-/* estilos del js */
-.listado-admin{
-    overflow-y: scroll;
-    height: 500px;
-}
-
-.lista-admin{
-    list-style: none;
+.divInputs {
     display: flex;
     flex-direction: column;
-    border-bottom: 2px solid black;
-    margin: 5px;
-    font-weight: bold;
-    flex-wrap: wrap;
+    flex: 1;
+    margin-right: 20px;
 }
-.titulo-lista{
-    border-bottom: 2px solid black;
-    font-weight: bold;
-    font-size: 1.3em;
+
+.divInputs input, textarea{
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 15px;
 }
-.botones-lista{
-    margin-top: 5px;
-    margin-bottom: 5px;
+
+.divImageProduct, .divImageProfile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 500px;
+    border: none;  
+}
+
+.divImageProfile{
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.divImageProduct img, .divImageProfile img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.divImageProfile img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.boton_guardar_cambios {
+    background-color: #ddd;
+    color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.boton_guardar_cambios:hover{
+    background-color: #ccc;
+    color: #000;
+}
+
+.div_inputs_carac {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.div_inputs_carac label {
+    margin-right: 5px;
+}
+
+.div_inputs_carac input{
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    
+}
+
+input:focus {
+    border-color: #bbb;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    outline: none;
+}
+
+input::placeholder {
+    color: #888;
 }
