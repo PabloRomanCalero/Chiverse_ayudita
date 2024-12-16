@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Followers;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class FollowersController extends Controller
@@ -46,5 +48,31 @@ class FollowersController extends Controller
     public function destroy(Followers $followers)
     {
         //
+    }
+
+    
+    public function followUser(Request $request)
+    {
+        $follower = new Followers();
+        $authUserid = Auth::user()->id;
+        $user_id = $request->get('searchedUserId');
+        $follower->user_id = $user_id;
+        $follower->follower_id = $authUserid;
+        $follower->save();
+    }
+
+    public function unfollowUser(Request $request)
+    {
+        $authUserId = Auth::user()->id;
+        $user_id = $request->get('searchedUserId2');
+        $followers = Followers::where('user_id', $user_id)->where('follower_id', $authUserId);
+        $followers->delete();
+    }
+
+    public function getFollowers($userId)
+    {
+        $user = User::find($userId); 
+        $followers = $user->followers()->count();
+        return response()->json($followers, 200);
     }
 }

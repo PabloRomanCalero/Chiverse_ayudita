@@ -90,4 +90,31 @@ class UserController extends Controller
         $following = $user->following()->count();
         return response()->json([$user, $direcciones, $media, $mediaCount, $followers, $following], 200);
     }
+
+    public function getRandomUsers()
+    {   
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            $users = User::where('id', '!=', $userId)
+                        ->inRandomOrder()
+                        ->take(5)
+                        ->get();
+        } else {
+            $users = User::inRandomOrder()
+                        ->take(5)
+                        ->get();
+        }
+        return response()->json($users, 200);
+    }
+
+    public function getUserIdLogged()
+    {   
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+            return response()->json($userId, 200);
+        } else {
+            return response()->json("not_logged", 200);
+        }
+        
+    }
 }

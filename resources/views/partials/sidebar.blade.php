@@ -8,9 +8,9 @@
             <li><a href="{{route('inicio')}}"><img src="{{asset('img/sidebar/inicio.png')}}" class="imgDesplegable" alt="inicio">Inicio</a></li>
             <li><a href="{{route('cuenta')}}"><img src="{{asset('img/sidebar/usuario.png')}}" class="imgDesplegable" alt="usuario">Perfil</a></li>
             <li><a href="{{route('tienda')}}"><img src="{{asset('img/sidebar/ropa.png')}}" class="imgDesplegable" alt="tienda">Ropa</a></li>
-            <li><a href="{{route('carrito')}}"><img src="{{asset('img/sidebar/carrito.png')}}" class="imgDesplegable" alt="carrito">Carrito</a></li>
+            <li><a href="{{route('carrito')}}"><img src="{{asset('img/sidebar/carrito.png')}}" class="imgDesplegable" alt="carrito"><span id="numCarrito" class="numCarrito">0</span>Carrito</a></li>
         </ul>      
-        <span id="numCarrito" class="numCarrito">0</span> 
+         
     </div>
     <ul>
         <li class="dropdown">

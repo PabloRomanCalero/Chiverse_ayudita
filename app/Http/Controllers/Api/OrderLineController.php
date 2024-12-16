@@ -19,9 +19,10 @@ class OrderLineController extends Controller
         if (Auth::user()) {
             $userId = Auth::user()->id;
             $orderCart = Order::where([['user_id', $userId], ['status', 'carrito']])->get();
-            $orderLine = $orderCart[0]->id;
-            $orderLines = OrderLine::where('order_id', $orderLine)->get();
-            if($orderCart){
+            if(!$orderCart->isEmpty()){
+                $orderLine = $orderCart[0]->id;
+                $orderLines = OrderLine::where('order_id', $orderLine)->get();
+            
                 return response()->json($orderLines, 200);
             }else{
                 return response()->json('no hay order', 200);
@@ -40,6 +41,7 @@ class OrderLineController extends Controller
         $orderLine->order_id = $request->get('order_id');
         $orderLine->product_id = $request->get('product_id');
         $orderLine->quantity = $request->get('quantity');
+        $orderLine->talla = $request->get('talla');
         $orderLine->save();
         return response()->json($orderLine, 200);
     }

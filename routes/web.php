@@ -70,8 +70,9 @@ Route::post('/searchedUser',[UserController::class,'showSearchedUser'])->name('s
 Route::post('api/crearDescuento',[App\Http\Controllers\Api\DescuentoController::class,'verificarLikesDescuento'])->middleware('api');
 
 //SearchedUser
-Route::post('/followUser',[FollowersController::class,'followUser'])->name('followUser')->middleware('auth');
-Route::delete('/unfollowUser',[FollowersController::class,'unfollowUser'])->name('unfollowUser')->middleware('auth');
+Route::post('api/followers/followUser',[App\Http\Controllers\Api\FollowersController::class,'followUser'])->name('followUser')->middleware('auth');
+Route::delete('api/followers/unfollowUser',[App\Http\Controllers\Api\FollowersController::class,'unfollowUser'])->name('unfollowUser')->middleware('auth');
+Route::post('api/followers/getFollowers/{userId}',[App\Http\Controllers\Api\FollowersController::class,'getFollowers'])->name('getFollowers')->middleware('auth');
 Route::get('api/media/mediaSearchedUser/{user_id}',[App\Http\Controllers\Api\mediaController::class,'mediaSearchedUser'])->middleware('api');
 
 //Tienda
@@ -86,6 +87,12 @@ Route::put('api/products/stock/{product}',[App\Http\Controllers\Api\ProductContr
 //ORDERS-ORDERSLINE
 Route::get('api/orders/cart',[App\Http\Controllers\Api\OrderController::class,'orderCart'])->middleware('api');
 
+
+Route::get('api/users/getRandomUsers',[App\Http\Controllers\Api\UserController::class,'getRandomUsers'])->middleware('api');
+Route::get('api/users/getUserIdLogged',[App\Http\Controllers\Api\UserController::class,'getUserIdLogged'])->middleware('api');
+Route::post('api/tallas/tallasOfProduct',[App\Http\Controllers\Api\TallaController::class,'tallasOfProduct'])->middleware('api');
+Route::post('api/tallas/{product_id}/getStockOfTalla/{size}',[App\Http\Controllers\Api\TallaController::class,'getStockOfTalla'])->middleware('api');
+
 //API RESOURCES
 Route::apiResource('api/users',App\Http\Controllers\Api\UserController::class)->middleware('api');
 Route::apiResource('api/products',App\Http\Controllers\Api\ProductController::class)->middleware('api');
@@ -95,3 +102,11 @@ Route::apiResource('api/orders',App\Http\Controllers\Api\OrderController::class)
 Route::apiResource('api/orderLines',App\Http\Controllers\Api\OrderLineController::class)->middleware('api');
 Route::apiResource('api/addresses',App\Http\Controllers\Api\AddressController::class)->middleware('api');
 Route::apiResource('api/descuentos',App\Http\Controllers\Api\DescuentoController::class)->middleware('api');
+Route::apiResource('api/tallas',App\Http\Controllers\Api\TallaController::class)->middleware('api');
+Route::apiResource('api/comments',App\Http\Controllers\Api\CommentController::class)->middleware('api');
+Route::apiResource('api/followers',App\Http\Controllers\Api\FollowersController::class)->middleware('api');
+
+
+
+
+

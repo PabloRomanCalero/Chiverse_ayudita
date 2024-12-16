@@ -16,11 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('category');
             $table->string('sex');
-            $table->string('size')->nullable();
             $table->string('brand');
             $table->string('description');
             $table->decimal('price');
-            $table->integer('stock');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

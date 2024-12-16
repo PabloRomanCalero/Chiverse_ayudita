@@ -3,14 +3,13 @@ let bloqueLista = document.querySelector('#productos-usuarios');
 let botonUsuarios = document.querySelector('#usuarios');
 let botonPedidos = document.querySelector('#pedidos');
 let botonProductos = document.querySelector('#productos');
+let botonPublicaciones = document.querySelector('#publicaciones');
 let tokenInput = document.querySelector('[name=_token]');
 let token = tokenInput.value;
 let articleEdicion = document.querySelector('#edicion')
 let divErrores = document.createElement('div');
 divErrores.className = "div_errores";
 
-
-//Funcion listar productos o usuarios
 const listar = async(nombre)=>{
 
     let lista;
@@ -25,11 +24,42 @@ const listar = async(nombre)=>{
         let res = await fetch("/api/users");
         users = await res.json();
         lista = users;
-    }else{
+    }else if(nombre === 'PEDIDOS'){
         let res5 = await fetch("/api/orders");
         pedidos = await res5.json();
         lista = pedidos;
-    };
+    }else if(nombre === 'TALLAS'){
+        let product_id = botonProductos.getAttribute("data-productId");
+        console.log(product_id);
+        let res6 = await fetch("/api/tallas/tallasOfProduct", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "product_id": product_id})
+        });
+        tallas = await res6.json();
+        lista = tallas;
+    }else if(nombre === 'PUBLICACIONES'){
+        let res8 = await fetch("/api/media");
+        media = await res8.json();
+        lista = media;
+    }else if(nombre === 'COMENTARIOS'){
+        let media_id = botonPublicaciones.getAttribute("data-mediaId");
+        console.log(media_id);
+        let res9 = await fetch("/api/comments/mediaComments", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "media_id": media_id})
+        });
+        comments = await res9.json();
+        console.log(comments);
+        lista = comments;
+    }
 
     let titulo_lista = document.createElement('h2');
     bloqueLista.innerHTML="";
@@ -42,48 +72,52 @@ const listar = async(nombre)=>{
     bloqueLista.append(titulo_lista);
 
     lista.forEach(element => {
-
         if(nombre === 'PRODUCTOS'){
             let liId = document.createElement("li");
             let liName = document.createElement("li");
             let liCategory = document.createElement("li");
             let liSex = document.createElement("li");
-            let liSize = document.createElement("li");
             let liPrice = document.createElement("li");
             let liDescription = document.createElement("li");
             let liImage = document.createElement('li');
-            let liStock = document.createElement("li");
             let lista_admin = document.createElement('ul');
 
             let liBotones = document.createElement('li');
             let botonEditar = document.createElement('button');
             let botonBorrar = document.createElement('button');
+            let botonVerTallas = document.createElement('button');
             botonEditar.textContent = 'Editar';
             botonEditar.value = element.id;
             botonEditar.className ="edit_button";
             botonBorrar.textContent = 'Borrar';
             botonBorrar.value = element.id;
             botonBorrar.className = "delete_button";
+            botonVerTallas.textContent = 'Ver Tallas';
+            botonVerTallas.value = element.id;
+            botonVerTallas.className = "verTallas_button";
             liBotones.className="botones-lista"
-            liBotones.append(botonEditar,botonBorrar);
+            liBotones.append(botonEditar,botonBorrar, botonVerTallas);
 
             liId.textContent = 'ID: '+ element.id;
             liName.textContent = 'Name: '+element.name;
             liCategory.textContent = 'Category: '+ element.category;
             liSex.textContent = 'Sex: '+ element.sex;
-            liSize.textContent = 'Size: '+element.size;
             liPrice.textContent = 'Price: '+element.price;
-            //URL DE LA IMAGEN
             images.forEach(image => {
                 if(image.product_id === element.id){
                     liImage.textContent = 'URL: '+ image.url;
                 }
             });
             liDescription.textContent = 'Descripción: '+element.description;
-            liStock.textContent = 'Stock: '+ element.stock;
             lista_admin.className = 'lista-admin';
-            lista_admin.append(liId,liName,liCategory,liSex,liSize,liPrice,liDescription,liStock,liImage,liBotones);
+            lista_admin.append(liId,liName,liCategory,liSex,liPrice,liDescription,liImage,liBotones);
             bloqueLista.append(lista_admin);
+
+            botonVerTallas.addEventListener('click',(e) =>{
+                botonProductos.setAttribute("data-productId", element.id);
+                listar('TALLAS');
+            });
+
         }else if(nombre === 'USUARIOS'){
             let liId = document.createElement("li");
             let liName = document.createElement("li");
@@ -106,7 +140,7 @@ const listar = async(nombre)=>{
             liBotones.append(botonEditar,botonBorrar);
 
             liId.textContent = 'ID: '+ element.id;
-            liName.textContent = 'Nombre: '+element.name +' '+element.surname+' '+element.surname2;
+            liName.textContent = 'Nombre: ' + element.name + ' ' + element.surname + ' ' + (element.surname2 ? element.surname2 : '');
             liUserName.textContent = 'Nombre usuario : '+ element.username;
             console.log(element.email)
             liEmail.textContent = 'Email : '+element.email;
@@ -148,25 +182,114 @@ const listar = async(nombre)=>{
         
             lista_admin.append(liId, liStatus, liTypePayment, liTotalPrice, liDate, liUserId, liAddressId, liBotones);
             bloqueLista.append(lista_admin);
+        }else if(nombre === 'TALLAS') {
+            
+            titulo_lista.textContent = "TALLAS DEL PRODUCTO " + element.product_id
+
+            let lista_admin = document.createElement('ul');
+            let liIdTalla = document.createElement("li");
+            let liTalla = document.createElement("li");
+            let liStock = document.createElement("li");
+
+            let liBotones = document.createElement("li");
+            let botonEditar = document.createElement("button");
+            botonEditar.textContent = "Editar";
+            botonEditar.value = element.id;
+            botonEditar.className = "edit_button";
+            liBotones.className = "botones-lista";
+            liBotones.append(botonEditar);
+
+            liIdTalla.textContent = "ID: " + element.id;
+            liTalla.textContent = "Talla: " + element.talla;
+            liStock.textContent = "Stock: " + element.stock;
+
+            lista_admin.append(liIdTalla, liTalla, liStock, liBotones);
+            bloqueLista.append(lista_admin);    
+        }else if(nombre === 'PUBLICACIONES') {
+
+            let lista_admin = document.createElement('ul');
+            let liId = document.createElement("li");
+            let liUserId = document.createElement("li");
+            let liProductId = document.createElement("li");
+            let liUrl = document.createElement("li");
+            let liLikes = document.createElement("li");
+            let liDescription = document.createElement("li");
+            let liBotones = document.createElement('li');
+            let botonEditar = document.createElement('button');
+            let botonBorrar = document.createElement('button');
+            let botonVerComentarios = document.createElement('button');
+
+            botonEditar.textContent = 'Editar';
+            botonEditar.value = element.id;
+            botonEditar.className = "edit_button";
+            botonBorrar.textContent = 'Borrar';
+            botonBorrar.className = "delete_button";
+            botonBorrar.value = element.id;
+            botonVerComentarios.textContent = 'Ver Comentarios';
+            botonVerComentarios.className = "verComentarios_button";
+            botonVerComentarios.value = element.id;
+            liBotones.className = "botones-lista";
+            liBotones.append(botonEditar, botonBorrar, botonVerComentarios);
+
+            liId.textContent = 'ID: ' + element.id;
+            liUserId.textContent = 'ID Usuario: ' + element.user_id;
+            liProductId.textContent = 'ID Producto: ' + element.product_id;
+            liUrl.textContent = 'URL: ' + element.url;
+            liLikes.textContent = 'Likes: ' + element.likes;
+            liDescription.textContent = 'Descripción: ' + element.description;
+            
+            lista_admin.append(liId,liUserId,liProductId,liUrl,liLikes,liDescription,liBotones);
+            bloqueLista.append(lista_admin); 
+            
+            botonVerComentarios.addEventListener('click',(e) =>{
+                botonPublicaciones.setAttribute("data-mediaId", element.id);
+                listar('COMENTARIOS');
+            });
+
+        }else if(nombre === 'COMENTARIOS') {
+
+            let media_id = botonPublicaciones.getAttribute("data-mediaId");
+            titulo_lista.textContent = "COMENTARIOS DE LA PUBLICACIÓN " + media_id;
+            element.forEach(comment =>{
+                let lista_admin = document.createElement('ul');
+                let liIdComentario = document.createElement("li");
+                let liMediaId = document.createElement("li");
+                let liUserId = document.createElement("li");
+                let liComentario = document.createElement("li");
+                let liBotones = document.createElement("li");
+                let botonBorrar = document.createElement("button");
+
+                botonBorrar.textContent = "Borrar";
+                botonBorrar.value = comment.id;
+                botonBorrar.className = "delete_button";
+                liBotones.className = "botones-lista";
+                liBotones.append(botonBorrar);
+
+                liIdComentario.textContent = "ID Comentario: " + comment.id;
+                liMediaId.textContent = "ID Publicación: " + comment.media_id;
+                liUserId.textContent = "ID Usuario: " + comment.user_id;
+                liComentario.textContent = "Comentario: " + comment.comment;
+
+                lista_admin.append(liIdComentario, liMediaId, liUserId, liComentario, liBotones);
+                bloqueLista.append(lista_admin);
+            })       
         }
     });
     edit(nombre);
-    deleteProductsUsersOrders(nombre); 
+    deleteProductsUsersOrdersMediaComments(nombre); 
 }
 
-//FUNCIÓN PARA BORRAR USUARIOS, PRODUCTOS Y PEDIDOS
-const deleteProductsUsersOrders = async(nombre)=>{
+const deleteProductsUsersOrdersMediaComments = async(nombre)=>{
     deleteButtons = document.querySelectorAll('.delete_button');
     deleteButtons.forEach((deleteButton)=>{
         deleteButton.addEventListener('click',(e)=>{
             //console.log(e)
-            getProductsUsersAndOrdersForDelete(e,nombre);
+            getProductsUsersMediaCommentsAndOrdersForDelete(e,nombre);
         })
     })
 }
 
-//FUNCIÓN PARA RECOGER LOS DATOS DE LOS USUARIOS, PRODUCTOS Y PEDIDOS PARA PODER BORRARLOS
-const getProductsUsersAndOrdersForDelete = async(e,nombre)=>{
+const getProductsUsersMediaCommentsAndOrdersForDelete = async(e,nombre)=>{
 
     let id = e.target.value;
 
@@ -185,9 +308,10 @@ const getProductsUsersAndOrdersForDelete = async(e,nombre)=>{
                 },
             }).then(()=>listar('PRODUCTOS'));
         }
-    }else if(nombre === 'USUARIO'){
+    }else if(nombre === 'USUARIOS'){
         let resUser = await fetch(`/api/users/${id}`);
         let user = await resUser.json();
+        console.log(user);
         let mensajeUser = confirm(`Estas seguro de querer borrar el usuario ${user.name} de DNI ${user.dni} ?`);
         if(mensajeUser){
             fetch(`/api/users/${id}`, {
@@ -211,19 +335,47 @@ const getProductsUsersAndOrdersForDelete = async(e,nombre)=>{
                 },
             }).then(()=>listar('PEDIDOS'));
         }
+    }else if(nombre === 'PUBLICACIONES'){
+        let resMedia = await fetch(`/api/media/${id}`);
+        let media = await resMedia.json();
+        console.log(media);
+        let mensajeMedia = confirm(`Estas seguro de querer borrar la publicación ${media.id}?`);
+        if(mensajeMedia){
+            fetch(`/api/media/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+            }).then(()=>listar('PUBLICACIONES'));
+        }
+    }else if(nombre === 'COMENTARIOS'){
+        let resComment = await fetch(`/api/comments/${id}`);
+        let comment = await resComment.json();
+        console.log(comment);
+        let mensajeComment = confirm(`Estas seguro de querer borrar el comentario ${comment.id}?`);
+        if(mensajeComment){
+            fetch(`/api/comments/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+            }).then(()=>listar('COMENTARIOS'));
+        }
     }
 }
 
 
-// FUNCIÓN EDITAR USUARIOS, PRODUCTOS Y PEDIDOS
 const edit = async(nombre)=>{
     let editButtons = document.querySelectorAll('.edit_button');
+    console.log("amai");
     for(let edit_button of editButtons ){
         edit_button.addEventListener('click',(e)=>{
             console.log(e.target.value)
             bloqueEditar.innerHTML="";
 
-            const getUserProductsAndOrders= async()=>{
+            const getUserMediaProductsTallasAndOrders= async()=>{
                 let boton_enviar_cambios = document.createElement('button');
                 boton_enviar_cambios.className="boton_guardar_cambios";
                 boton_enviar_cambios.textContent = "Guardar Cambios"
@@ -231,7 +383,7 @@ const edit = async(nombre)=>{
                 if(nombre === 'USUARIOS'){
                     let respUsuario = await fetch(`/api/users/${e.target.value}`);
                     let usuario = await respUsuario.json();
-                    //Inputs de los campos para cambiarlo
+
                     let divInputs = document.createElement('div')
                     let inputName = document.createElement('input');
                     let inputSurname = document.createElement('input');
@@ -247,7 +399,6 @@ const edit = async(nombre)=>{
                     divImageProfile.classList.add('divImageProfile')
                     divInputs.classList.add('divInputs')
 
-                    //tipos de los input
                     inputName.type = "text";
                     inputSurname.type ="text";
                     inputSurname2.type = "text";
@@ -256,7 +407,6 @@ const edit = async(nombre)=>{
                     inputPhone.type ="number";
                     inputFechaNacimiento.type = "date";
 
-                    //Aplicamos el contenido
                     console.log(usuario.name)
                     inputName.value = usuario.name;
                     inputSurname.value = usuario.surname;
@@ -268,27 +418,12 @@ const edit = async(nombre)=>{
                     inputFechaNacimiento.value = usuario.birthdate;
                     imgProfile.src = usuario.profile_photo
 
-                    imgProfile.onload = function() {
-                        if (imgProfile.naturalWidth > imgProfile.naturalHeight) {
-                            imgProfile.classList.add('ImagenMayorWidth');
-                        }
-                        else if (imgProfile.naturalHeight > imgProfile.naturalWidth) {
-                            imgProfile.classList.add('ImagenMayorHeight');
-                        }
-                        else{
-                            imgProfile.classList.add('ImagenCuadrada');
-                        }
-            
-                    };
-
                     divInputs.append('Nombre: ',inputName,'Apellido: ',inputSurname,'2Apellido: ',inputSurname2,'Nombre Usuario: ',inputUserName,'DNI: ',inputDNI,'Correo electrónico: ', inputEmail,
                     'Teléfono: ',inputPhone,'Fecha Nacimiento: ',inputFechaNacimiento,boton_enviar_cambios,divErrores)
                     divImageProfile.append(imgProfile)
                     bloqueEditar.append(divInputs, divImageProfile);
 
-                    //GUARDAR LOS CAMBIOS REALIZADOS SOBRE EL USUARIO
                     boton_enviar_cambios.addEventListener('click',(e)=>{
-                        //VALIDACIONES DE LOS INPUT
                         let arrayErrores = [];
                         let error = false;
                         if(inputName.value === '' || inputName.value === null  || inputName.value.length > 30){
@@ -326,7 +461,6 @@ const edit = async(nombre)=>{
                             }
                             divErrores.append(ulErrores);
                         }else{
-                            //CAMBIAMOS LOS DATOS DEL USUARIO
                             let usuarioCambiado = {"name" : inputName.value,"surname":inputSurname.value,"surname2":inputSurname2.value,
                                                     "username": inputUserName.value,"dni":inputDNI.value,"phone":inputPhone.value,"birthdate":inputFechaNacimiento.value};
                             let usuarioId = usuario.id;
@@ -342,27 +476,25 @@ const edit = async(nombre)=>{
                                 console.log('jojojo')
                                 listar('USUARIOS');
                             });
+                            divErrores.innerHTML="";
                             console.log('guay')
                         }
                     })
                 }else if(nombre === 'PRODUCTOS'){
-                    //EDITAR PRODUCTO
                     let respProducto = await fetch(`/api/products/${e.target.value}`);
                     let producto = await respProducto.json();
                     let res4 = await fetch("/api/images");
                     images = await res4.json();
                     console.log(images);
                     console.log(producto);
-                    //CREACIÓN DE SUS INPUTS Y DIV
+
                     let divInputs = document.createElement('div')
                     let inputName = document.createElement('input');
                     let inputCategory = document.createElement('input');
                     let inputSex = document.createElement('input');
                     let inputBrand = document.createElement('input');
-                    let inputSize = document.createElement('input');
                     let inputPrice = document.createElement('input');
                     let inputDescription = document.createElement('textarea');
-                    let inputStock = document.createElement('input');
                     let inputImage = document.createElement('input');
                     let divImageProduct = document.createElement('div');
                     let imgProduct = document.createElement('img');
@@ -370,30 +502,23 @@ const edit = async(nombre)=>{
                     divInputs.classList.add('divInputs');
                     divImageProduct.classList.add('divImageProduct');
 
-                    //Añadimos propiedades
                     inputDescription.cols ="40";
                     inputDescription.rows ="5";
-                    //DEFINIMOS TIPO DE INPUT
                     inputName.type = "text";
                     inputCategory.type = "text";
                     inputSex.type = "text";
                     inputBrand.type = "text";
-                    inputSize.type = "text";
                     inputPrice.type = "number";
                     inputDescription.type = "text";
-                    inputStock.type = "number";
 
-                    //Insertamos el contenido en los input
                     console.log(producto.category);
                     inputName.value = producto.name;
                     inputCategory.value = producto.category;
                     inputSex.value = producto.sex;
                     inputBrand.value = producto.brand;
-                    inputSize.value = producto.size;
                     inputPrice.value = producto.price;
                     inputDescription.value = producto.description;
-                    inputStock.value = producto.stock;
-                    //bucle para la URL de la imagen
+
                     images.forEach(image => {
                         if(image.product_id === producto.id){
                             inputImage.value = image.url;
@@ -401,14 +526,12 @@ const edit = async(nombre)=>{
                             idImage = image.id;
                         }
                     });
-                    divInputs.append('Nombre: ',inputName,'Tipo: ',inputCategory,'Sexo: ',inputSex, 'Marca: ',inputBrand,'Talla: ',inputSize,'Price: ',
-                    inputPrice,'Descripción: ',inputDescription,'Stock: ',inputStock,'URL: ',inputImage, boton_enviar_cambios,divErrores)
+                    divInputs.append('Nombre: ',inputName,'Tipo: ',inputCategory,'Sexo: ',inputSex, 'Marca: ',inputBrand,
+                    inputPrice,'Descripción: ',inputDescription,'URL: ',inputImage, boton_enviar_cambios,divErrores)
                     divImageProduct.append(imgProduct);
                     bloqueEditar.append(divInputs, divImageProduct);
 
-                    //GUARDAR LOS CAMBIOS REALIZADOS SOBRE EL PRODUCTO
                     boton_enviar_cambios.addEventListener('click',(e)=>{
-                        //VALIDACIONES DE LOS INPUT
                         let arrayErrores = [];
                         let error = false;
                         if(inputName.value === '' || inputName.value === null  || inputName.value.length > 30){
@@ -427,20 +550,12 @@ const edit = async(nombre)=>{
                             arrayErrores.push('Error en la marca del producto, por favor escríbalo bien');
                             error = true;
                         }
-                        if(inputSize.value === '' || inputSize.value === null){
-                            arrayErrores.push('Error en la marca del producto, por favor escríbalo bien');
-                            error = true;
-                        }
                         if(inputPrice.value === '' || inputPrice.value === null || isNaN(inputPrice.value)){
                             arrayErrores.push('Error en la talla del producto, por favor escríbalo bien');
                             error = true;
                         }
                         if(inputDescription.value === '' || inputDescription.value === null || inputDescription.value.length > 255){
                             arrayErrores.push('Error en la descripción del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputStock.value === '' || inputStock.value === null || isNaN(inputStock.value)){
-                            arrayErrores.push('Error en el stock del producto, por favor escríbalo bien');
                             error = true;
                         }
                         if(inputImage.value === '' || inputImage.value === null ){
@@ -458,11 +573,9 @@ const edit = async(nombre)=>{
                             }
                             divErrores.append(ulErrores);
                         }else{
-                            //CAMBIAMOS LOS DATOS DEL PRODUCTO
                             let productoCambiado = {"name" : inputName.value,"category":inputCategory.value,"sex":inputSex.value,"brand":inputBrand.value,
-                            "size":inputSize.value,"price":inputPrice.value,"description": inputDescription.value,"stock":inputStock.value};
-                            let productoId = producto.id;
-                            fetch(`/api/products/${productoId}`, {
+                            "price":inputPrice.value,"description": inputDescription.value};
+                            fetch(`/api/products/${producto.id}`, {
                                 method: "PUT",
                                 headers: {
                                     'X-CSRF-TOKEN': token,
@@ -481,108 +594,25 @@ const edit = async(nombre)=>{
                             }).then((res) => {
                                 listar('PRODUCTOS');
                             });
+                            divErrores.innerHTML="";
                         }
                     });
-                }else if(nombre === 'PRODUCTOS'){
-                    //EDITAR PRODUCTO
-                    let respProducto = await fetch(`/api/products/${e.target.value}`);
-                    let producto = await respProducto.json();
-                    let res4 = await fetch("/api/images");
-                    images = await res4.json();
-                    console.log(images);
-                    console.log(producto);
-                    //CREACIÓN DE SUS INPUTS Y DIV
-                    let divInputs = document.createElement('div')
-                    let inputName = document.createElement('input');
-                    let inputCategory = document.createElement('input');
-                    let inputSex = document.createElement('input');
-                    let inputBrand = document.createElement('input');
-                    let inputSize = document.createElement('input');
-                    let inputPrice = document.createElement('input');
-                    let inputDescription = document.createElement('textarea');
+                }else if(nombre === 'TALLAS'){
+                    let respTalla = await fetch(`/api/tallas/${e.target.value}`);
+                    let talla = await respTalla.json();
+                    let divInputs = document.createElement('div');
                     let inputStock = document.createElement('input');
-                    let inputImage = document.createElement('input');
-                    let divImageProduct = document.createElement('div');
-                    let imgProduct = document.createElement('img');
-                    
-                    divInputs.classList.add('divInputs');
-                    divImageProduct.classList.add('divImageProduct');
-
-                    //Añadimos propiedades
-                    inputDescription.cols ="40";
-                    inputDescription.rows ="5";
-                    //DEFINIMOS TIPO DE INPUT
-                    inputName.type = "text";
-                    inputCategory.type = "text";
-                    inputSex.type = "text";
-                    inputBrand.type = "text";
-                    inputSize.type = "text";
-                    inputPrice.type = "number";
-                    inputDescription.type = "text";
                     inputStock.type = "number";
+                    inputStock.value = talla.stock
+                    divInputs.classList.add('divInputs');
+                    divInputs.append(`Stock de talla ${talla.talla}: `, inputStock, boton_enviar_cambios,divErrores)
+                    bloqueEditar.append(divInputs);
 
-                    //Insertamos el contenido en los input
-                    console.log(producto.category);
-                    inputName.value = producto.name;
-                    inputCategory.value = producto.category;
-                    inputSex.value = producto.sex;
-                    inputBrand.value = producto.brand;
-                    inputSize.value = producto.size;
-                    inputPrice.value = producto.price;
-                    inputDescription.value = producto.description;
-                    inputStock.value = producto.stock;
-                    //bucle para la URL de la imagen
-                    images.forEach(image => {
-                        if(image.product_id === producto.id){
-                            inputImage.value = image.url;
-                            imgProduct.src = image.url;
-                            idImage = image.id;
-                        }
-                    });
-                    divInputs.append('Nombre: ',inputName,'Tipo: ',inputCategory,'Sexo: ',inputSex, 'Marca: ',inputBrand,'Talla: ',inputSize,'Price: ',
-                    inputPrice,'Descripción: ',inputDescription,'Stock: ',inputStock,'URL: ',inputImage, boton_enviar_cambios,divErrores)
-                    divImageProduct.append(imgProduct);
-                    bloqueEditar.append(divInputs, divImageProduct);
-
-                    //GUARDAR LOS CAMBIOS REALIZADOS SOBRE EL PRODUCTO
                     boton_enviar_cambios.addEventListener('click',(e)=>{
-                        //VALIDACIONES DE LOS INPUT
                         let arrayErrores = [];
                         let error = false;
-                        if(inputName.value === '' || inputName.value === null  || inputName.value.length > 30){
-                            arrayErrores.push('Error en el nombre del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputCategory.value === '' || inputCategory.value === null || inputCategory.value.length > 25){
-                            arrayErrores.push('Error en el tipo del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputSex.value != 'Hombre' && inputSex.value != 'Mujer' && inputSex.value != 'Unisex'){
-                            arrayErrores.push('Error en el sex del producto, por favor escríbalo bien ("Hombre" o "Mujer")');
-                            error = true;
-                        }
-                        if(inputBrand.value === '' || inputBrand.value === null){
-                            arrayErrores.push('Error en la marca del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputSize.value === '' || inputSize.value === null){
-                            arrayErrores.push('Error en la marca del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputPrice.value === '' || inputPrice.value === null || isNaN(inputPrice.value)){
-                            arrayErrores.push('Error en la talla del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputDescription.value === '' || inputDescription.value === null || inputDescription.value.length > 255){
-                            arrayErrores.push('Error en la descripción del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputStock.value === '' || inputStock.value === null || isNaN(inputStock.value)){
-                            arrayErrores.push('Error en el stock del producto, por favor escríbalo bien');
-                            error = true;
-                        }
-                        if(inputImage.value === '' || inputImage.value === null ){
-                            arrayErrores.push('Error en el imagen , por favor escríbalo bien');
+                        if (inputStock.value === '' || inputStock.value === null || isNaN(inputStock.value) || parseInt(inputStock.value) < 0) {
+                            arrayErrores.push('Error en el stock , debe ser un numero positivo');
                             error = true;
                         }
                         if(error){
@@ -596,131 +626,223 @@ const edit = async(nombre)=>{
                             }
                             divErrores.append(ulErrores);
                         }else{
-                            //CAMBIAMOS LOS DATOS DEL PRODUCTO
-                            let productoCambiado = {"name" : inputName.value,"category":inputCategory.value,"sex":inputSex.value,"brand":inputBrand.value,
-                            "size":inputSize.value,"price":inputPrice.value,"description": inputDescription.value,"stock":inputStock.value};
-                            let productoId = producto.id;
-                            fetch(`/api/products/${productoId}`, {
+                            let tallaCambiada = {"stock" : inputStock.value};
+                            fetch(`/api/tallas/${talla.id}`, {
                                 method: "PUT",
                                 headers: {
                                     'X-CSRF-TOKEN': token,
                                     'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify(productoCambiado),
-                            })
-                            console.log(idImage);
-                            fetch(`/api/images/${idImage}`, {
-                                method: "PUT",
-                                headers: {
-                                    'X-CSRF-TOKEN': token,
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({"url":inputImage.value}),
+                                body: JSON.stringify(tallaCambiada),
                             }).then((res) => {
-                                listar('PRODUCTOS');
+                                listar('TALLAS');
                             });
+                            divErrores.innerHTML="";
+                        }
+                    });
+                }else if(nombre === 'PUBLICACIONES'){
+                    let respMedia = await fetch(`/api/media/${e.target.value}`);
+                    let media = await respMedia.json();
+                    console.log(media);
+                    let divInputs = document.createElement('div')
+                    let inputLikes = document.createElement('input');
+                    let inputDescription = document.createElement('input');
+                    let divImageMedia = document.createElement('div');
+                    let imgMedia = document.createElement('img');
+                    
+                    divInputs.classList.add('divInputs');
+                    divImageMedia.classList.add('divImageMedia');
+
+                    inputDescription.cols ="40";
+                    inputDescription.rows ="5";
+                    inputLikes.type = "text";
+                    inputDescription.type = "text";
+                    
+                    inputLikes.value = media.likes;
+                    inputDescription.value = media.description;
+                    imgMedia.src = media.url
+                    
+                    divInputs.append('Likes: ',inputLikes,'Descripción: ',inputDescription,boton_enviar_cambios,divErrores)
+                    divImageMedia.append(imgMedia);
+                    bloqueEditar.append(divInputs, divImageMedia);
+
+                    boton_enviar_cambios.addEventListener('click',(e)=>{
+                        let arrayErrores = [];
+                        let error = false;
+                        if (inputLikes.value === '' || inputLikes.value === null || isNaN(inputLikes.value) || parseInt(inputLikes.value) < 0) {
+                            arrayErrores.push('Error en los likes, debe ser un numero positivo');
+                            error = true;
+                        }
+                        if(inputDescription.value === '' || inputDescription.value === null || inputDescription.value.length > 255){
+                            arrayErrores.push('Error en la descripción de la publicación, por favor escríbalo bien');
+                            error = true;
+                        }
+                        if(error){
+                            divErrores.innerHTML="";
+                            let ulErrores = document.createElement('ul');
+                            ulErrores.className='lista_errores';
+                            for(let _error of arrayErrores){
+                                let liError = document.createElement('li');
+                                liError.textContent = _error;
+                                ulErrores.append(liError);
+                            }
+                            divErrores.append(ulErrores);
+                        }else{
+                            let publicacionCambiado = {"likes" : inputLikes.value,"description":inputDescription.value};
+                            fetch(`/api/media/${media.id}`, {
+                                method: "PUT",
+                                headers: {
+                                    'X-CSRF-TOKEN': token,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(publicacionCambiado),
+                            }).then((res) => {
+                                listar('PUBLICACIONES');
+                            });
+                            divErrores.innerHTML="";
                         }
                     });
                 }
             }
-            getUserProductsAndOrders();
+            getUserMediaProductsTallasAndOrders();
         });
     }
 }
 
 
-//Funcion para crear los productos desde el admin
-const makeProducts = async()=>{
+const makeProducts = async () => {
     makeProductsButton = document.querySelector('#crear-productos');
-    makeProductsButton.addEventListener('click',(e)=>{
-        bloqueLista.innerHTML="";
-        articleEdicion.innerHTML="";
-        let carac = ['name','category','sex','size','brand','price','description','stock','link'];
+    makeProductsButton.addEventListener('click', (e) => {
+        bloqueLista.innerHTML = "";
+        articleEdicion.innerHTML = "";
+        let carac = ['name', 'category', 'sex', 'brand', 'price', 'description', 'link'];
 
-        for(let name of carac){
+        for (let name of carac) {
             let div = document.createElement('div');
-            div.className="div_inputs_carac"
+            div.className = "div_inputs_carac"
             let label = document.createElement('label');
             label.textContent = name;
             label.className = 'label_carac'
             let input = document.createElement('input');
             input.id = name;
-            input.className ="input_carac";
-            div.append(label,input);
+            input.className = "input_carac";
+            div.append(label, input);
             bloqueLista.append(div);
         }
+
+        let stockContainer = document.createElement('div');
+        stockContainer.id = 'stock-container';
+        bloqueLista.append(stockContainer);
+
         let sendButton = document.createElement('button');
         sendButton.textContent = 'Crear Producto';
         sendButton.className = 'send_button';
-        bloqueLista.append(sendButton,divErrores);
+        bloqueLista.append(sendButton, divErrores);
 
-        //CREAR PRODUCTO
-        sendButton.addEventListener('click',(e)=>{
+        document.querySelector('#category').addEventListener('change', (e) => {
+            const category = e.target.value;
+            stockContainer.innerHTML = ""; 
+
+            let sizes = [];
+            if (category === 'Zapatillas') {
+                sizes = [36, 38, 40, 42, 44];
+            } else {
+                sizes = ['XS', 'S', 'M', 'L', 'XL'];
+            }
+
+            sizes.forEach(size => {
+                let div = document.createElement('div');
+                div.className = "div_inputs_carac"
+                let label = document.createElement('label');
+                label.textContent = `Stock para ${size}`;
+                label.className = 'label_carac';
+                let input = document.createElement('input');
+                input.id = size;
+                input.className = "input_carac";
+                input.type = 'number';
+                input.value = 0;
+                input.setAttribute('data-talla', size);
+                div.append(label, input);
+                stockContainer.append(div);
+            });
+        });
+
+        sendButton.addEventListener('click', (e) => {
 
             let inputName = document.querySelector('#name');
             let inputCategory = document.querySelector('#category');
             let inputSex = document.querySelector('#sex');
-            let inputSize = document.querySelector('#size');
-            let inputBrand = document.querySelector('#brand')
+            let inputBrand = document.querySelector('#brand');
             let inputPrice = document.querySelector('#price');
             let inputDescription = document.querySelector('#description');
-            let inputStock = document.querySelector('#stock');
             let inputLink = document.querySelector('#link');
 
-            const sendProductInformation = async() =>{
-                //CONSEGUIR LA LONGITUD DEL ARRAY DE PRODUCTOS
+            const sendProductInformation = async () => {
                 let resProductosLength = await fetch("/api/products");
                 productosLong = await resProductosLength.json();
-                let idProduct = productosLong.length +1;
-                //VALIDACIONES DE LOS INPUT
+                let idProduct = productosLong.length + 1;
+
                 let arrayErrores = [];
                 let error = false;
-                if(inputName.value === '' || inputName.value === null  || inputName.value.lenght > 30){
+                if (inputName.value === '' || inputName.value === null || inputName.value.length > 30) {
                     arrayErrores.push('Error en el nombre del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(inputCategory.value === '' || inputCategory.value === null || inputCategory.value.lenght > 25){
-                    arrayErrores.push('Error en el tipo del producto, por favor escríbalo bien');
+                if (inputCategory.value === '' || inputCategory.value === null || inputCategory.value.length > 25) {
+                    arrayErrores.push('Error en la categoría del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(inputSex.value != 'Hombre' && inputSex.value != 'Mujer' && inputSex.value != 'Unisex'){
-                    arrayErrores.push('Error en el sex del producto, por favor escríbalo bien ("Hombre" o "Mujer")');
+                if (inputSex.value !== 'Hombre' && inputSex.value !== 'Mujer' && inputSex.value !== 'Unisex') {
+                    arrayErrores.push('Error en el sexo del producto, por favor escríbalo bien ("Hombre", "Mujer" o "Unisex")');
                     error = true;
                 }
-                if(inputBrand.value === '' || inputPrice.value === null){
+                if (inputBrand.value === '' || inputBrand.value === null) {
                     arrayErrores.push('Error en la marca del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(inputPrice.value === '' || inputPrice.value === null || isNaN(inputPrice.value)){
+                if (inputPrice.value === '' || inputPrice.value === null || isNaN(inputPrice.value)) {
                     arrayErrores.push('Error en el precio del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(inputDescription.value === '' || inputDescription.value === null || inputDescription.value.lenght > 255){
+                if (inputDescription.value === '' || inputDescription.value === null || inputDescription.value.length > 255) {
                     arrayErrores.push('Error en la descripción del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(inputStock.value === '' || inputStock.value === null || isNaN(inputStock.value)){
-                    arrayErrores.push('Error en el stock del producto, por favor escríbalo bien');
-                    error = true;
-                }
-                if(inputLink.value === '' || inputLink.value === null){
+                if (inputLink.value === '' || inputLink.value === null) {
                     arrayErrores.push('Error en la URL del producto, por favor escríbalo bien');
                     error = true;
                 }
-                if(error){
-                    divErrores.innerHTML="";
+
+                const stockInputs = stockContainer.querySelectorAll('input');
+                let stockValues = {};
+                stockInputs.forEach(input => {
+                    if (input.value === '' || isNaN(input.value)) {
+                        arrayErrores.push(`Error en el stock ${input.id}, por favor escríbalo bien`);
+                        error = true;
+                    } else {
+                        stockValues[input.id] = input.value;
+                    }
+                });
+
+                if (error) {
+                    divErrores.innerHTML = "";
                     let ulErrores = document.createElement('ul');
-                    ulErrores.className='lista_errores';
-                    for(let _error of arrayErrores){
+                    ulErrores.className = 'lista_errores';
+                    for (let _error of arrayErrores) {
                         let liError = document.createElement('li');
                         liError.textContent = _error;
                         ulErrores.append(liError);
                     }
                     divErrores.append(ulErrores);
-                }else{
-                    //ENVAIR DATOS
-                    let producto = {"name": inputName.value,"category": inputCategory.value,"sex": inputSex.value,"brand": inputBrand.value,"size": inputSize.value,"price": inputPrice.value,
-                                    "description":inputDescription.value,"stock": inputStock.value};
+                } else {
+                    let producto = {
+                        "name": inputName.value,
+                        "category": inputCategory.value,
+                        "sex": inputSex.value,
+                        "brand": inputBrand.value,
+                        "price": inputPrice.value,
+                        "description": inputDescription.value,
+                    };
                     console.log(producto);
                     fetch("/api/products", {
                         method: "POST",
@@ -730,29 +852,42 @@ const makeProducts = async()=>{
                         },
                         body: JSON.stringify(producto),
                     });
-                    console.log('A');
+                    stockInputs.forEach(async (input) =>{
+                        let talla = input.getAttribute("data-talla");
+                        let stock = input.value;
+                        fetch("/api/tallas", {
+                            method: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': token,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({"product_id": idProduct, "talla": talla, "stock": stock}),
+                        });
+                    })
+                    console.log(idProduct);
+                    console.log(inputLink.value);
                     fetch("/api/images", {
                         method: "POST",
                         headers: {
                             'X-CSRF-TOKEN': token,
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({"product_id": idProduct,"url":inputLink.value}),
-                    }).then((res)=>{
+                        body: JSON.stringify({ "product_id": idProduct, "url": inputLink.value }),
+                    }).then((res) => {
                         inputName.value = '';
                         inputCategory.value = '';
                         inputSex.value = '';
                         inputBrand.value = '';
                         inputPrice.value = '';
-                        inputSize.value = '';
                         inputDescription.value = '';
-                        inputStock.value = '';
                         inputLink.value = '';
+                        stockContainer.innerHTML = '';
                     });
+
+                    
                 }
             }
             sendProductInformation();
-
         });
     });
 }
@@ -770,6 +905,8 @@ botonProductos.addEventListener('click',(e) =>{
     listar('PRODUCTOS');
 });
 
-
+botonPublicaciones.addEventListener('click',(e) =>{
+    listar('PUBLICACIONES');
+});
 
 makeProducts();

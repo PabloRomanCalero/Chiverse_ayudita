@@ -2,6 +2,7 @@ main {
     padding: 0 !important;
     padding-left: 20px !important;
     background-color: #f9f9f9;
+    height: 100%;
 }
 
 .section-admin {
@@ -66,6 +67,7 @@ main {
 
 .listado-admin .botones-lista{
     list-style: none;
+    margin-top: 5px;
 }
 
 .listado-admin button {
@@ -108,11 +110,11 @@ main {
     margin-bottom: 15px;
 }
 
-.divImageProduct, .divImageProfile {
+.divImageProduct, .divImageProfile, .divImageMedia {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 500px;
     height: 500px;
     border: none;  
 }
@@ -123,16 +125,10 @@ main {
     overflow: hidden;
 }
 
-.divImageProduct img, .divImageProfile img {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.divImageProfile img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.divImageProduct img, .divImageProfile img, .divImageMedia img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .boton_guardar_cambios {
@@ -179,4 +175,8 @@ input:focus {
 
 input::placeholder {
     color: #888;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }

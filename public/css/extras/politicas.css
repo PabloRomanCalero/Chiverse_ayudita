@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
+main {
+    color: #333;
+}
 
 .section-politica-privacidades {
     display: flex;
@@ -20,12 +21,10 @@
 }
 
 .article-politica-privacidades h1 {
-    font-family: 'Montserrat';
     font-size: 1.6em;
 }
 
 .article-politica-privacidades h2 {
-    font-family: 'Montserrat';
     font-size: 1.2em;
 }
 

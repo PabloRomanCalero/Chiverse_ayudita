@@ -28,9 +28,9 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comments $comments)
+    public function show(Comments $comment)
     {
-        //
+        return response()->json($comment,200);
     }
 
     /**
@@ -44,9 +44,10 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comments $comments)
+    public function destroy(Comments $comment)
     {
-        //
+        $comment->delete();
+        return response()->json(["eliminado"=>$comment],200);
     }
 
     public function createComment(Request $request){

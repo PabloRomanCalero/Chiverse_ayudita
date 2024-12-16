@@ -40,26 +40,29 @@ class mediaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(media $media)
+    public function show(media $medium)
     {
-        return response()->json($media,200);
+        return response()->json($medium,200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, media $media)
+    public function update(Request $request, media $medium)
     {
-        //
+        $medium->likes = $request->likes;
+        $medium->description = $request->description;
+        $medium->save();
+        return response()->json($medium, 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(media $media)
+    public function destroy(media $medium)
     {
-        $media->delete();
-        return response()->json(["eliminado"=>$media],200);
+        $medium->delete();
+        return response()->json(["eliminado"=>$medium],200);
     }
 
     public function userExceptMedia(){

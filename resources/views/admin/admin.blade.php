@@ -9,6 +9,7 @@
         @csrf
         <article class="article-modalidades">
             <button id="usuarios">Usuarios</button>
+            <button id="publicaciones">Publicaciones</button>
             <button id="pedidos">Pedidos</button>
             <button id="productos">Productos</button>
             <button id="crear-productos">Crear Productos</button>

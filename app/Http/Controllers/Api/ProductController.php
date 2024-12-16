@@ -27,10 +27,8 @@ class ProductController extends Controller
         $product->category = $request->category;
         $product->sex = $request->sex;
         $product->brand = $request->brand;
-        $product->size = $request->size;
         $product->price = $request->price;
         $product->description = $request->description;
-        $product->stock = $request->stock;
         $product->save();
 
         return response()->json(["nombre" => $product->name], 201);
@@ -53,10 +51,8 @@ class ProductController extends Controller
         $product->category = $request->category;
         $product->sex = $request->sex;
         $product->brand = $request->brand;
-        $product->size = $request->size;
         $product->price = $request->price;
         $product->description = $request->description;
-        $product->stock = $request->stock;
         $product->save();
 
         return response()->json(["nombre" => $product->name], 201);

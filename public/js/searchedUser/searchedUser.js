@@ -3,18 +3,44 @@ const profileInfo = document.querySelector('#profile-info');
 const mediaContainer = document.querySelector('#media-container');
 const buttonFollow = document.getElementById('followUserButton');
 const buttonUnfollow = document.getElementById('unfollowUserButton');
-const userId = document.getElementById('searchedUserId').value;
+const userId = buttonFollow.getAttribute('data-user-id');
+var userIdLogged = "";
 let token = document.querySelector('[name=_token]').value;
 
+async function getUserLogged(){
+    let respUserLogged = await fetch('/api/users/getUserIdLogged');
+    let userLogged = await respUserLogged.json();
+    userIdLogged = userLogged;
+    console.log(userIdLogged);
+}
+
 function updateFollowStatus(status) {
-    localStorage.setItem('followStatus_' + userId, status);
+    if (userIdLogged) { 
+        localStorage.setItem('followStatus_' + userIdLogged + userId, status);
+    }
 }
 
 function getFollowStatus() {
-    return localStorage.getItem('followStatus_' + userId);
+    if (userIdLogged) {
+        const followStatus = localStorage.getItem('followStatus_' + userIdLogged + userId);
+        return followStatus;
+    }
+}
+
+async function updateFollowers() {
+    let respFollowers = await fetch(`/api/followers/getFollowers/${userId}`, {
+        method: "POST",
+        headers: {
+            'X-CSRF-TOKEN': token,
+            'Content-Type': 'application/json',
+        },
+    });
+    let followersCount = await respFollowers.json();
+    return followersCount;
 }
 
 listarUsuario = async () => {
+    
     let respUsers = await fetch(`api/users/viewUserMedia/${userId}`);
     let dataProfile = await respUsers.json();
 
@@ -26,18 +52,6 @@ listarUsuario = async () => {
     profileImg.src = `${user.profile_photo}`;
     profileImg.alt = "Profile Picture";
     profileImg.classList.add('profile-img');
-
-    profileImg.onload = function() {
-        if (profileImg.naturalWidth > profileImg.naturalHeight) {
-            profileImg.classList.add('ImagenMayorWidth');
-        }
-        else if (profileImg.naturalHeight > profileImg.naturalWidth) {
-            profileImg.classList.add('ImagenMayorHeight');
-        }
-        else{
-            profileImg.classList.add('ImagenCuadrada');
-        }
-    };
     
     profilePicture.appendChild(profileImg);
 
@@ -48,7 +62,7 @@ listarUsuario = async () => {
     username.textContent = `${user.username}`;
 
     const name = document.createElement('p');
-    name.textContent = `${user.name} ${user.surname} ${user.surname2}`;
+    name.textContent = `${user.name} ${user.surname} ${user.surname2 ? user.surname2 : ''}`;
 
     const profileStats = document.createElement('ul');
     profileStats.classList.add('profile-stats');
@@ -73,13 +87,63 @@ listarUsuario = async () => {
     profileInfo.appendChild(profilePicture);
     profileInfo.appendChild(profileDetails);
     
+    function displayButtons() {
+        const followStatus = getFollowStatus();
+        console.log(followStatus);
+        
+        if(followStatus === 'unfollowed' || followStatus === null){
+            buttonFollow.style.display = 'block';
+            buttonUnfollow.style.display = 'none';
+            
+        }else{
+            buttonFollow.style.display = 'none';
+            buttonUnfollow.style.display = 'block';
+        }
+    }
+
+    async function updateFollowersText(){
+        let followersCount = await updateFollowers();
+        followers.innerHTML = "<strong>Followers:</strong> " + followersCount;
+    }
+
+    buttonFollow.addEventListener("click", () => {  
+        if(userIdLogged != "not_logged"){
+            fetch("/api/followers/followUser", {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"searchedUserId": userId}),
+            });
+            updateFollowStatus('followed');
+            displayButtons();
+            updateFollowersText();
+        }   
+    });
+
+    buttonUnfollow.addEventListener("click", () => {  
+        if(userIdLogged != "not_logged"){
+            fetch("/api/followers/unfollowUser", {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({"searchedUserId2": userId}),
+            });
+            updateFollowStatus('unfollowed');
+            displayButtons();
+            updateFollowersText();
+        }
+    });
+    displayButtons();
     listarMedia();
 }
 
 listarMedia = async () => {
     mediaContainer.innerHTML = ''; 
 
-    // Local storage de likes
     let likedMedia = JSON.parse(localStorage.getItem('likedMedia')) || [];
 
     let respMedia = await fetch(`api/media/mediaSearchedUser/${userId}`);
@@ -88,6 +152,9 @@ listarMedia = async () => {
     const h2Publicaciones = document.createElement('h2');
     h2Publicaciones.innerHTML = 'Publicaciones';
     h2Publicaciones.classList.add('titleH2Publi');
+    const divPublicaciones = document.createElement("div");
+    divPublicaciones.classList.add("divPublicaciones");
+
     mediaContainer.appendChild(h2Publicaciones);
     mediaJson.forEach(async (media) => {
         let respMediaProduct = await fetch(`api/product/mediaProduct/${media.product_id}`);
@@ -113,7 +180,6 @@ listarMedia = async () => {
         const descriptionElement = document.createElement('p');
         descriptionElement.textContent = media.description;
 
-        // Botón de "Me gusta"
         const likeButton = document.createElement('button');
         likeButton.innerHTML = '<i class="fas fa-heart"></i>';
         likeButton.classList.add('like-button');
@@ -137,7 +203,6 @@ listarMedia = async () => {
                     likedMedia.push(media.id);
                     localStorage.setItem('likedMedia', JSON.stringify(likedMedia));
 
-                    $userId = media.user_id;
                     await fetch('api/crearDescuento', {
                         method: 'POST',
                         headers: {
@@ -153,7 +218,6 @@ listarMedia = async () => {
         const likesElement = document.createElement('p');
         likesElement.innerHTML = `<span class="like-count">${media.likes}</span>`;
 
-        //Comments elements
         const commentButton = document.createElement('button');
         commentButton.innerHTML = '<i class="fas fa-comment"></i>';
         commentButton.classList.add('comment-button');
@@ -164,11 +228,9 @@ listarMedia = async () => {
         const productName = document.createElement('p');
         productName.innerHTML = `<strong>Prenda:</strong> ${product.name}`;
 
-        //Div comentarios y formComentarios
         const divComments = document.createElement('div');
         divComments.classList.add('divComments')
 
-        //Sacar comentarios del media y crear divs dinamicos
         let commentsMedia = await fetch('api/comments/mediaComments', {
             method: 'POST',
             headers: {
@@ -220,12 +282,10 @@ listarMedia = async () => {
         divComments.appendChild(input);
         divComments.appendChild(button);
 
-        //Formulario de comentarios
         commentButton.onclick = function () {
             divComments.style.display = 'block';
         };
 
-        //Crear commentario cuando se envia el input
         input.addEventListener('keypress', async function (event) {
             if (event.key === 'Enter') {
                 const y = window.scrollY;
@@ -272,32 +332,14 @@ listarMedia = async () => {
 
         mediaElement.appendChild(hr);
         mediaElement.appendChild(contentElement);
-        mediaContainer.appendChild(mediaElement);
+        divPublicaciones.appendChild(mediaElement);
+        mediaContainer.appendChild(divPublicaciones);
     });
 }
-
-function displayButtons() {
-    const followStatus = getFollowStatus();
-
-    if (followStatus === 'followed') {
-        buttonFollow.style.display = 'none';
-        buttonUnfollow.style.display = 'block';
-    } else {
-        buttonFollow.style.display = 'block';
-        buttonUnfollow.style.display = 'none';
-    }
+async function init() {
+    await getUserLogged(); 
+    listarUsuario(); 
 }
 
-buttonFollow.addEventListener("click", () => {  
-    updateFollowStatus('followed');
-});
-
-buttonUnfollow.addEventListener("click", () => {  
-    updateFollowStatus('unfollowed');
-});
-
-window.onload = async () => {
-    await listarUsuario();
-    displayButtons();
-}
+init();
 

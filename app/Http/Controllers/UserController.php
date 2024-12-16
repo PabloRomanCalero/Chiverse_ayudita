@@ -92,5 +92,4 @@ class UserController extends Controller
         return view('searchedUser', compact('user_id'));
     }
 
-    
 }

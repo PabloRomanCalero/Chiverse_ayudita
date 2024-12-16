@@ -64,24 +64,4 @@ class FollowersController extends Controller
         //
     }
 
-    public function followUser(Request $request)
-    {
-        $follower = new Followers();
-        $authUserid = Auth::user()->id;
-        $user_id = $request->get('searchedUserId');
-        $follower->user_id = $user_id;
-        $follower->follower_id = $authUserid;
-        $follower->save();
-       
-        return view('searchedUser', compact('user_id'));
-    }
-
-    public function unfollowUser(Request $request)
-    {
-        $authUserId = Auth::user()->id;
-        $user_id = $request->get('searchedUserId2');
-        $followers = Followers::where('user_id', $user_id)->where('follower_id', $authUserId);
-        $followers->delete();
-        return view('searchedUser', compact('user_id'));
-    }
 }

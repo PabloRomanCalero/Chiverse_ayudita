@@ -35,22 +35,29 @@ async function listarCarrito(){
         });
         numCarrito.textContent = numeroCarrito;
 
-        //creación líneas de pedido
         orderLines.forEach( async line => {
             console.log(line);
-            //Llamada para recopilar cada producto
             let resProducto = await fetch(`api/products/${line.product_id}`);
             let producto = await resProducto.json();
 
-            //Imagen de cada producto
             let imageProducts = await fetch(`api/image/product/${line.product_id}`);
             let imageProductJson = await imageProducts.json();
             let imageProduct = imageProductJson[0]; 
-           
+
+            let resTalla = await fetch(`/api/tallas/${line.product_id}/getStockOfTalla/${line.talla}`, {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': token,
+                    'Content-Type': 'application/json',
+                },
+            });
+            let tallaData = await resTalla.json();
+                
             let articuloProducto = document.createElement('article');
             let img = document.createElement('img');
             let divNomStock = document.createElement('div');
             let nombre = document.createElement('h2');
+            let talla = document.createElement('p');
             let stock = document.createElement('p');
             let divBotonCantidad = document.createElement('div');
             let mas = document.createElement('button');
@@ -60,7 +67,6 @@ async function listarCarrito(){
             let precioTotalProducto = document.createElement('p');
             let botonEliminar = document.createElement('button');
 
-            //Insertamos el valor en cada caso
             img.src = imageProduct.url;
             nombre.textContent = producto.name;
             menos.textContent = '-';
@@ -68,7 +74,8 @@ async function listarCarrito(){
             precio.textContent = `Pr/ud: ${producto.price} €`;
             precioTotalProducto.textContent = `Total: ${(producto.price * line.quantity).toFixed(2)} €`;
             botonEliminar.textContent = 'Eliminar';
-            stock.textContent = `STOCK : ${producto.stock}`
+            talla.textContent = `TALLA : ${tallaData.talla}`;
+            stock.textContent = `STOCK : ${tallaData.stock}`;
             cantidad.textContent = line.quantity;
             mas.value = line.id;
             menos.value = line.id;
@@ -76,10 +83,10 @@ async function listarCarrito(){
             menos.dataset.id = line.quantity;
             botonEliminar.value = line.id;
 
-            //clases
             articuloProducto.className="articulo--producto-carrito";
             img.className="img--producto-carrito";
             divNomStock.className = "div--nombreStock-carrito";
+            talla.className = "stock--producto-carrito";
             stock.className = "stock--producto-carrito";
             divBotonCantidad.className = "div--botonCantidad-carrito";
             mas.className = "boton-mas-menos";
@@ -88,7 +95,7 @@ async function listarCarrito(){
             precioTotalProducto.className = "precioFinal--producto-carrito";
             botonEliminar.className ="boton--borrarProducto-carrito";
 
-            divNomStock.append(nombre,stock);
+            divNomStock.append(nombre,talla,stock);
             divBotonCantidad.append(menos,cantidad,mas);
             articuloProducto.append(img,divNomStock,divBotonCantidad,precio,precioTotalProducto,botonEliminar);
             sectionCarrito.append(articuloProducto);
@@ -101,7 +108,6 @@ async function listarCarrito(){
                 stockTotal = false;
             }
 
-            //Funciones despues de mostrar todos los productos
             contadorLinesLength += 1;
             if(contadorLinesLength === orderLinesLength){
                 precioFinal = precioFinal.toFixed(2);
@@ -195,7 +201,6 @@ async function compraFinal(precioFinal,numeroCarrito,stockTotal,orderLines,lista
     let articulosCarrito = document.createElement('p');
     let totalPrecio = document.createElement('p');
 
-    //Descuentos del usuario
     let descuentosUser = await fetch('api/descuentos');
     let descuentos = await descuentosUser.json();
     let precioSinDescuento = precioFinal;
@@ -204,7 +209,6 @@ async function compraFinal(precioFinal,numeroCarrito,stockTotal,orderLines,lista
         let selectDescuentos = document.createElement('select');
         selectDescuentos.className = 'select-descuentos';
 
-        // Opción por defecto
         let optionDefault = document.createElement('option');
         optionDefault.text = 'Selecciona un descuento';
         optionDefault.value = '';
@@ -232,20 +236,17 @@ async function compraFinal(precioFinal,numeroCarrito,stockTotal,orderLines,lista
         articuloCompraFinal.append(selectDescuentos);
     }
     
-    //introducimos datos
     botonFinalizarCompra.textContent = 'Finalizar la compra';
     if (numeroCarrito === 0) { articulosCarrito.textContent = `OOPS, no hoy ningún artículo en tu carrito` }
     else if (numeroCarrito === 1) { articulosCarrito.textContent = `Hay ${numeroCarrito} artículo en tu carrito` }
     else { articulosCarrito.textContent = `Hay ${numeroCarrito} artículos en tu carrito` }
     totalPrecio.textContent = `Total: ${precioFinal} €`;
 
-    //clases a los elementos
     articuloCompraFinal.className = "articulo-carrito-final";
     botonFinalizarCompra.className = "boton-carrito-finalizar-compra";
     articulosCarrito.className = "articulos-carrito-final";
     totalPrecio.className = "precio-carrito-final";
 
-    //Los metemos en la vista
     articuloCompraFinal.append(botonFinalizarCompra, articulosCarrito, totalPrecio);
     sectionCarrito.append(articuloCompraFinal);
 

@@ -17,4 +17,8 @@ class Product extends Model
     {
         return $this->belongsToMany(media::class);
     }
+    public function tallas()
+    {
+        return $this->hasMany(tallas::class);
+    }
 }

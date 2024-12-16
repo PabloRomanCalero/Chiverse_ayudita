@@ -27,18 +27,6 @@ async function searchUsers() {
                 profileImageFind.src = user.profile_photo; 
                 profileImageFind.alt = 'Imagen del perfil'; 
                 usernameFind.textContent = user.username;
-                
-                profileImageFind.onload = function() {
-                    if (profileImageFind.naturalWidth > profileImageFind.naturalHeight) {
-                        profileImageFind.classList.add('ImagenMayorWidth');
-                    }
-                    else if (profileImageFind.naturalHeight > profileImageFind.naturalWidth) {
-                        profileImageFind.classList.add('ImagenMayorHeight');
-                    }
-                    else{
-                        profileImageFind.classList.add('ImagenCuadrada');
-                    }
-                };
 
                 resultadoU.addEventListener("click", () => {
                     resultadosUsersDiv.style.display = "none";
@@ -94,19 +82,6 @@ listarMedia = async () => {
         imgProfileMedia.classList.add('imgProfileMedia');
         imgProfileMedia.src = userMedia.profile_photo;
         imgProfileMedia.alt = 'Imagen del Perfil'
-
-        imgProfileMedia.onload = function() {
-            if (imgProfileMedia.naturalWidth > imgProfileMedia.naturalHeight) {
-                imgProfileMedia.classList.add('ImagenMayorWidth');
-            }
-            else if (imgProfileMedia.naturalHeight > imgProfileMedia.naturalWidth) {
-                imgProfileMedia.classList.add('ImagenMayorHeight');
-            }
-            else{
-                imgProfileMedia.classList.add('ImagenCuadrada');
-            }
-
-        };
 
         const profileMedia = document.createElement('div');
         profileMedia.classList.add('profileMedia');
@@ -198,6 +173,7 @@ listarMedia = async () => {
 
         if (commentsJson != 0) {
             await commentsJson.forEach(commentsArray => {
+                console.log(commentsArray);
                 commentsArray.forEach(async comment => {
                     let userCommentResp = await fetch(`api/users/viewUserMedia/${comment.user_id}`)
                     let userJson = await userCommentResp.json();
@@ -210,18 +186,6 @@ listarMedia = async () => {
                     profileImageComment.src = `${userComment.profile_photo}`; 
                     profileImageComment.alt = 'Profile Image'; 
                     imageUserComment.appendChild(profileImageComment);
-
-                    profileImageComment.onload = function() {
-                        if (profileImageComment.naturalWidth > profileImageComment.naturalHeight) {
-                            profileImageComment.classList.add('ImagenMayorWidth');
-                        }
-                        else if (profileImageComment.naturalHeight > profileImageComment.naturalWidth) {
-                            profileImageComment.classList.add('ImagenMayorHeight');
-                        }
-                        else{
-                            profileImageComment.classList.add('ImagenCuadrada');
-                        }
-                    };
 
                     const commentInfo = document.createElement('span');
                     commentInfo.classList.add('commentInfo');
@@ -256,7 +220,6 @@ listarMedia = async () => {
         //Crear commentario cuando se envia el input
         input.addEventListener('keypress', async function (event) {
             if (event.key === 'Enter') {
-                
                 await fetch('api/comments/createComment', {
                     method: 'POST',
                     headers: {
@@ -294,16 +257,6 @@ listarMedia = async () => {
             videoElement.muted = true;
             divVideoElement.appendChild(videoElement);
             mediaElement.appendChild(divVideoElement);
-
-            videoElement.addEventListener('loadedmetadata', function () {            
-                if (videoElement.videoWidth > videoElement.videoHeight) {
-                    videoElement.classList.add('ImagenMayorWidth');
-                } else if (videoElement.videoHeight > videoElement.videoWidth) {
-                    videoElement.classList.add('ImagenMayorHeight');
-                } else {
-                    videoElement.classList.add('ImagenCuadrada');
-                }
-            });
             
         } else {
             const imageElement = document.createElement('img');
@@ -312,23 +265,7 @@ listarMedia = async () => {
             imageElement.alt = 'Media';
             divVideoElement.appendChild(imageElement);
             mediaElement.appendChild(divVideoElement);
-
-            imageElement.onload = function() {
-                if (imageElement.naturalWidth > imageElement.naturalHeight) {
-                    imageElement.classList.add('ImagenMayorWidth');
-                }
-                else if (imageElement.naturalHeight > imageElement.naturalWidth) {
-                    imageElement.classList.add('ImagenMayorHeight');
-                }
-                else{
-                    imageElement.classList.add('ImagenCuadrada');
-                }
-    
-            };
         }
-
-        
-
         mediaElement.appendChild(hr);
         mediaElement.appendChild(contentElement);
         mediaContainer.appendChild(mediaElement);
@@ -338,4 +275,41 @@ listarMedia = async () => {
 window.onload = async () => {
     await listarMedia();
     await searchUsers(); 
+    await getRandomUsers();
 };
+
+async function getRandomUsers() {
+    const randomUsersRecommended = document.getElementById('randomUsersRecommended');
+
+    let respUsersRecommended = await fetch('/api/users/getRandomUsers');
+    let mediaRecomendedUsers = await respUsersRecommended.json();
+    mediaRecomendedUsers.forEach((user)=> {
+        console.log(user);
+        let recomendedUserDiv = document.createElement("div");
+        recomendedUserDiv.classList.add("recomendedUserDiv");
+        let recomendedUserDivImage = document.createElement("div");
+        recomendedUserDivImage.classList.add("recomendedUserDivImage");
+        let imageUser = document.createElement("img");
+        imageUser.src = user.profile_photo;
+        recomendedUserDivImage.append(imageUser);
+
+        let divNameLink = document.createElement("div");
+        divNameLink.classList.add("divNameLink");
+        let nameUser = document.createElement("span")
+        nameUser.textContent = user.username;
+        console.log(user.username);
+        let verPerfil = document.createElement("a");
+        verPerfil.textContent = "Ver Perfil";
+
+        verPerfil.addEventListener("click", () =>{
+            userProfileUsername.value = user.id;
+            profileUserForm.submit();
+        })
+
+        divNameLink.append(nameUser, verPerfil);
+        recomendedUserDiv.append(recomendedUserDivImage, divNameLink);
+        randomUsersRecommended.append(recomendedUserDiv);
+    })
+
+}
+

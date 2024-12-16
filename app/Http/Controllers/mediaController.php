@@ -36,6 +36,7 @@ class mediaController extends Controller
     {
         $media = new media();
         $userId = Auth::user()->id;
+        
         if ($request->hasFile('file')) {
             $userFolder = public_path('media');
             $fileName = $request->file('file')->getClientOriginalName();

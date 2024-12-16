@@ -16,18 +16,6 @@ listarUsuario = async () => {
     profileImg.alt = "Profile Picture";
     profileImg.classList.add('profile-img');
 
-    profileImg.onload = function() {
-        if (profileImg.naturalWidth > profileImg.naturalHeight) {
-            profileImg.classList.add('ImagenMayorWidth');
-        }
-        else if (profileImg.naturalHeight > profileImg.naturalWidth) {
-            profileImg.classList.add('ImagenMayorHeight');
-        }
-        else{
-            profileImg.classList.add('ImagenCuadrada');
-        }
-    };
-
     profilePicture.appendChild(profileImg);
 
     const profileDetails = document.createElement('div');
@@ -37,7 +25,7 @@ listarUsuario = async () => {
     username.textContent = `${user.username}`;
 
     const name = document.createElement('p');
-    name.textContent = `${user.name} ${user.surname} ${user.surname2}`;
+    name.textContent = `${user.name} ${user.surname} ${user.surname2 ? user.surname2 : ''}`;
 
     const profileStats = document.createElement('ul');
     profileStats.classList.add('profile-stats');
@@ -74,6 +62,9 @@ listarMedia = async () => {
     const h2Publicaciones = document.createElement('h2');
     h2Publicaciones.innerHTML = 'Publicaciones';
     h2Publicaciones.classList.add('titleH2Publi');
+
+    let divPublicaciones = document.createElement("div");
+    divPublicaciones.classList.add("divPublicaciones");
     mediaContainer.appendChild(h2Publicaciones);
     mediaJson.forEach(async (media) => {
         let respMediaProduct = await fetch(`api/product/mediaProduct/${media.product_id}`);
@@ -194,7 +185,8 @@ listarMedia = async () => {
 
         mediaElement.appendChild(hr);
         mediaElement.appendChild(contentElement);
-        mediaContainer.appendChild(mediaElement);
+        divPublicaciones.appendChild(mediaElement);
+        mediaContainer.appendChild(divPublicaciones);
     });
 }
 

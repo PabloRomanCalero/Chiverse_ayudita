@@ -13,7 +13,7 @@
 
             <div class="inputFileWrapper">
                 <label class="botonForm" for="file">Cargar media</label>
-                <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png, .mp4" required>
+                <input type="file" id="file" name="file" accept=".jpg, .jpeg, .png, .mp4, .mov" required>
             </div>
 
             <div class="containerBuscador">

@@ -60,6 +60,7 @@ body {
     overflow: hidden;
     width: 50%;
     height: fit-content;
+    padding-bottom: 13px;
 }
 
 .userMediaDiv {
@@ -71,8 +72,8 @@ body {
 }
 
 .imgProfileMediaDiv {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -81,34 +82,19 @@ body {
 }
 
 .imgProfileMediaDiv > img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .imgProfileMedia {
     width: 100%;
     height: 100%;
-}
-
-.ImagenCuadrada {
-    width: 100%;
-    height: 100%;
-}
-  
-.ImagenMayorWidth {
-    width: 170%;
-    height: 100%;
-}
-  
-.ImagenMayorHeight {
-    width: 120%;
-    height: 150%;
+    object-fit: cover;
 }
 
 .profileMedia{
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
     font-style: italic;
 }
@@ -117,17 +103,17 @@ body {
     display: flex;
     align-items: center;
     width: 90%;
-    height: 550px;
-    border-radius: 3px;
+    height: 600px;
+    border-radius: 5px;
     position: relative;
     overflow: hidden;
+    background-color: black;
 }
 
 .divVideoImagen *{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%)
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .media-content{
@@ -142,7 +128,9 @@ body {
     margin-bottom: 10px; 
     font-size: 1em; 
     text-align: left; 
-    margin-left: 6px;
+    margin-left: 3px;
+    margin-block-start: 0.7em;
+    margin-block-end: 0.7em;
 }
 
 .media-functions{
@@ -151,8 +139,13 @@ body {
 }
 
 .media-functions > p{
-    margin-left: 0;
+    margin-left: 3px;
     margin-right: 10px;
+}
+
+.media-functions > button{
+    padding-inline: 0px;
+    padding-block: 0px;
 }
 
 .like-button {
@@ -200,7 +193,6 @@ body {
     align-items: center;
     border: 1px solid #ccc;
     padding: 3px;
-    margin-bottom: 10px;
     border-radius: 5px;
     width: 98%;
 }
@@ -216,10 +208,9 @@ body {
 }
 
 .imageUserComment > img{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .inputComment{
@@ -227,7 +218,7 @@ body {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .botonCrearComment {
@@ -277,10 +268,9 @@ body {
 }
 
 .imageUserFind img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .resultadoU:hover{
@@ -328,6 +318,75 @@ body {
 #searchUser:focus-within {
     background-color: #f0f0f0;
 }
+
+.searchedUserForm {
+    margin-block-end: 0.1em;
+}
+
+.searchAndRecomended {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.randomUsersRecommended {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+    gap: 0.5em;
+    margin-left: 4px;
+}
+
+.recomendedUserDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.recomendedUserDivImage {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 8px;
+    margin-left: 2px;
+    position: relative;
+}
+
+.recomendedUserDivImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.divNameLink {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 1px;
+}
+
+.divNameLink > *{
+    font-size: 0.9rem;
+}
+
+.divNameLink a {
+    color: #0095f6; 
+    text-decoration: none;
+    transition: color 0.3s; 
+}
+
+.divNameLink a:hover {
+    color: #0056b3;
+    cursor: pointer;
+}
+
+.titleUsersRecomended {
+    color:#C7C7C7;
+    font-size: 1.05rem;
+}
+
+
+
 
 @media (max-width: 1024px) {
     .media {

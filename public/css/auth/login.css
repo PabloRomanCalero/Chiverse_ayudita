@@ -1,24 +1,30 @@
+*{
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 body {
-    background-color: #222;
+    background-color: #f9f9f9;
     margin: 0;
-    font-family: Arial, sans-serif;
 }
 
 .main-login {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 1em;
+    margin-top: 2.5em;
     height: 90vh;
 }
 
 .section-login {
     display: flex;
     flex-direction: column;
-    background-color: #3b3b3b;
+    background-color: #fff;
     border-radius: 10px;
     padding: 50px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 21%;
 }
 
 .article-login-img {
@@ -35,31 +41,24 @@ body {
 }
 
 .titulo h1 {
-    color: #4CAF50;
+    color: #333;
     font-size: 2.5em;
     text-align: center;
     margin-bottom: 30px;
+    font-weight: bold;
 }
 
 label {
-    color: #4CAF50;
+    color: #333;
     display: block;
     margin-bottom: 10px;
+    font-size: 1.1em;
+    margin-left: 2px;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 15px;
-    border-radius: 5px;
-    border: none;
-    background-color: #333;
-    color: #fff;
-    margin-bottom: 30px;
-}
-
-.article-boton{
+.article-boton {
     display: flex;
+    gap: 10px;
 }
 
 .boton {
@@ -67,18 +66,21 @@ input[type="password"] {
     padding: 15px;
     border-radius: 5px;
     border: none;
-    background-color: #52c856;
-    color: #000;
+    background-color: #0095f6;
+    color: #fff;
     font-size: 1.2em;
     text-decoration: none;
     text-align: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s;
     margin-left: 5px;
     margin-right: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .boton:hover {
-    background-color: #4CAF50;
+    background-color: #0056b3;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
 
@@ -89,14 +91,14 @@ input[type="password"] {
 }
 
 .volver-inicio-login a {
-    color: #4CAF50;
+    color: #0095f6;
     text-decoration: none;
     font-size: 1.1em; 
 }
 
 .volver-inicio-login a:hover {
     text-decoration: underline;
-    color: #52c856;
+    color: #0056b3;
 }
 
 .registro {
@@ -105,13 +107,13 @@ input[type="password"] {
     align-items: center;
 }
 
-.registro > a{
-    color: white;
+.registro > a {
+    color: #333;
     text-decoration: none;
     font-size: 1.1em; 
 }
 
-.registro > a:hover{
+.registro > a:hover {
     text-decoration: underline;
 }
 
@@ -121,6 +123,46 @@ input[type="password"] {
     align-items: center;
     color: red;
 }
+
+.input-group {
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+}
+ .input-group:first-child {
+    justify-content: center;
+ }
+
+.input-group i {
+    color: #888;
+    font-size: 18px;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.input-group button {
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    padding-block: 0px;
+    padding-inline: 0px;
+    margin-right: 10px;
+}
+
 
 @media (max-width: 1024px) {
     .section-login {

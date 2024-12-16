@@ -18,12 +18,12 @@
 }
 
 #sexDiv div:hover {
-    background-color: #4CAF50;
+    background-color: #0095f6;
     color: #fff;
 }
 
 #sexDiv .selected {
-    background-color: #4CAF50;
+    background-color: #0095f6;
     color: #fff;
 }
 
@@ -39,6 +39,7 @@
 #listaCategory h2 {
     margin-bottom: 20px;
     font-size: 22px;
+    font-weight: 500;
 }
 
 #listaCategory ul {
@@ -125,12 +126,12 @@
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s, transform 0.3s;
 }
 
 .product:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     transform: translateY(-5px);
 }
 

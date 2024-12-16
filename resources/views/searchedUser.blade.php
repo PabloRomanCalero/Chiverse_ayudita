@@ -4,22 +4,13 @@
 @extends('layouts.layout')
 
 @section('content')
+@csrf
     <section class="section-profile" id="section-profile">
         <div class="profile-info" id="profile-info">
         </div>
         <div class="profile-actions">
-            <form id="followUserForm" method="POST" action="{{ route('followUser') }}" class="followUserForm">
-                @csrf
-                <input type="hidden" value="{{$user_id}}" name="searchedUserId" id="searchedUserId">
-                <button type="submit" class="botonForm" id="followUserButton">Seguir</button>
-            </form>
-
-            <form id="unfollowUserForm" method="POST" action="{{ route('unfollowUser') }}" class="unfollowUserForm">
-                @csrf
-                @method('DELETE')
-                <input type="hidden" value="{{$user_id}}" name="searchedUserId2" id="searchedUserId2">
-                <button type="submit" class="botonForm" id="unfollowUserButton">Dejar de seguir</button>
-            </form>
+            <button class="botonForm" id="followUserButton" data-user-id="{{ $user_id }}">Seguir</button>
+            <button class="botonForm" id="unfollowUserButton" data-user-id="{{ $user_id }}" style="display: none;">Dejar de seguir</button>
         </div>
         <div class="media-container" id="media-container"></div>
     </section>

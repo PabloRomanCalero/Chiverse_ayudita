@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained(
                 table:'products',indexName: 'OrderLinesProduct'
             )->onUpdate('cascade')->onDelete('cascade');
+            $table->string('talla');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

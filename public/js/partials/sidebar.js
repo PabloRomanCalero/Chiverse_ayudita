@@ -15,18 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
     async function numCarrito(){
         let respOrderLines = await fetch('/api/orderLines');
         let orderLines = await respOrderLines.json();
-        console.log(orderLines)
-        if(orderLines === 'error'){
-            console.log('no invitado');
-        }else{
-            console.log(orderLines);
-            let numCarrito = document.querySelector('#numCarrito');
-            let numeroCarrito = 0;
+        
+        let numCarrito = document.querySelector('#numCarrito');
+        let numeroCarrito = 0;
+        if(orderLines.length > 0 && orderLines != "error" && orderLines != "no hay order"){
             orderLines.forEach(linea =>{
                 numeroCarrito = numeroCarrito + linea.quantity;
             });
-            numCarrito.textContent = numeroCarrito;
-        }
+        }  
+        numCarrito.textContent = numeroCarrito;
+        
     }
     numCarrito();
 });
