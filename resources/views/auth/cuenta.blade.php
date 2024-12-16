@@ -27,5 +27,13 @@
     </div>
     <div class="media-container" id="media-container"></div>
 
+//     Pillo la ruta del controlador
+    <script>
+            var rutaLineaPedido = @json(route('lineaPedido.index'));
+        </script>
+    <div class="botonLineaPedido" id="botonLineaPedido" onclick="redirigir(rutaLineaPedido)">
+        <img src="https://cdn-icons-png.flaticon.com/512/3621/3621282.png"/>
+    </div>
+
 </section>
 @endsection

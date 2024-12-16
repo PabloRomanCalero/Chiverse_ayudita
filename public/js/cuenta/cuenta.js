@@ -49,12 +49,12 @@ listarUsuario = async () => {
 
     profileInfo.appendChild(profilePicture);
     profileInfo.appendChild(profileDetails);
-    
+
     listarMedia();
 }
 
 listarMedia = async () => {
-    mediaContainer.innerHTML = ''; 
+    mediaContainer.innerHTML = '';
 
     let respMedia = await fetch('api/media/mediaLogedUser');
     let mediaJson = await respMedia.json();
@@ -78,7 +78,7 @@ listarMedia = async () => {
         divVideoElement.classList.add('divVideoImagen');
 
         const hr = document.createElement('hr');
-        hr.style.width = '92%'; 
+        hr.style.width = '92%';
         hr.style.borderTop = '1px solid #ccc';
 
         const contentElement = document.createElement('div');
@@ -136,14 +136,14 @@ listarMedia = async () => {
                     const imageUserComment = document.createElement('div');
                     imageUserComment.classList.add('imageUserComment');
                     const profileImageComment = document.createElement('img');
-                    profileImageComment.src = `${userComment.profile_photo}`; 
-                    profileImageComment.alt = 'Profile Image'; 
+                    profileImageComment.src = `${userComment.profile_photo}`;
+                    profileImageComment.alt = 'Profile Image';
                     imageUserComment.appendChild(profileImageComment);
 
                     const commentInfo = document.createElement('span');
                     commentInfo.classList.add('commentInfo');
                     commentInfo.textContent = `${userComment.username}: ${comment.comment}`;
-                    
+
                     commentDiv.appendChild(imageUserComment);
                     commentDiv.appendChild(commentInfo);
                     commentsElement.innerHTML = `<span class="comment-count">${i}</span>`;
@@ -194,6 +194,11 @@ listarMedia = async () => {
 document.getElementById('profile_image').addEventListener('change', function() {
     document.getElementById('profilePhotoForm').submit();
 });
+
+
+function redirigir(ruta) {
+    window.location.href = ruta;
+}
 
 
 listarUsuario();

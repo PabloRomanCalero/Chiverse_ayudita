@@ -5,6 +5,7 @@ use App\Http\Controllers\DescuentoController;
 use App\Http\Controllers\FollowersController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\mediaController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -60,6 +61,9 @@ Route::get('api/users/viewUser',[App\Http\Controllers\Api\UserController::class,
 Route::get('api/media/mediaLogedUser',[App\Http\Controllers\Api\mediaController::class,'mediaLogedUser'])->middleware('api');
 Route::get('api/product/mediaProduct/{product_id}',[App\Http\Controllers\Api\ProductController::class,'mediaProduct'])->middleware('api');
 
+
+
+
 //Inicio
 Route::get('api/media/exceptMedia',[App\Http\Controllers\Api\mediaController::class,'userExceptMedia'])->middleware('api');
 Route::put('api/media/likesByMedia',[App\Http\Controllers\Api\mediaController::class,'likesByMedia'])->middleware('auth', 'api');
@@ -86,6 +90,7 @@ Route::put('api/products/stock/{product}',[App\Http\Controllers\Api\ProductContr
 
 //ORDERS-ORDERSLINE
 Route::get('api/orders/cart',[App\Http\Controllers\Api\OrderController::class,'orderCart'])->middleware('api');
+Route::resource('lineaPedido', OrderLineController::class);
 
 
 Route::get('api/users/getRandomUsers',[App\Http\Controllers\Api\UserController::class,'getRandomUsers'])->middleware('api');
